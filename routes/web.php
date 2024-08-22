@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -20,3 +21,10 @@ Route::get('/', function () {
 Route::get('/', function () {
     return view('halamanlogin');
 });
+<<<<<<< Updated upstream
+=======
+Route::get('/register', function () {
+    return view('register');
+});
+
+>>>>>>> Stashed changes
