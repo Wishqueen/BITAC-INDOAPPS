@@ -15,10 +15,9 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
+            $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->string('phone_number', 20);
-            $table->string('picture');
-            $table->enum('role', ['Pelajar', 'Mentor', 'Admin']) -> default('Pelajar');
+            $table->rememberToken();
             $table->timestamps();
         });
     }
