@@ -17,15 +17,27 @@
                 <span class="fas fa-key"></span>
                 <input type="email" name="email" id="email" placeholder="Email" required>
             </div>
-            <div class="form-field d-flex align-items-center">
+            {{-- <div class="form-field d-flex align-items-center">
                 <span class="fas fa-key"></span>
                 <input type="password" name="password" id="password" class="form-control @error('password') is-invalid @enderror" placeholder="Password" required>
 
                 @error('password')
-                <span class="invalid-feedback" role="alert">
-                    <strong>{{ $message }}</strong>
+                <span class="invalid-feedback" role="alert" style="color: red">
+                    <span>{{ $message }}</span>
                 </span>
             @enderror
+            </div> --}}
+            <div class="form-field d-flex align-items-center">
+                <span class="fas fa-key"></span>
+                <input type="password" name="password" id="password" 
+                       class="form-control @error('password') is-invalid @enderror" 
+                       placeholder="Password" required>
+            
+                @error('password')
+                    <span class="invalid-feedback error-message" role="alert">
+                        {{ $message }}
+                    </span>
+                @enderror
             </div>
             <div class="form-field d-flex align-items-center">
                 <span class="fas fa-key"></span>
