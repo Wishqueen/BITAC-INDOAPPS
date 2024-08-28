@@ -70,28 +70,33 @@
                 </div>
                 <div class="col-lg-6 wow fadeInUp" data-wow-delay="0.3s">
                     <h6 class="section-title bg-white text-start text-primary pe-3">About Us</h6>
-                    <h1 class="mb-4">Welcome to Bali IT Academy</h1>
-                    <p class="mb-4">Tempor erat elitr rebum at clita. Diam dolor diam ipsum sit. Aliqu diam amet diam et eos. Clita erat ipsum et lorem et sit.</p>
-                    <p class="mb-4">Tempor erat elitr rebum at clita. Diam dolor diam ipsum sit. Aliqu diam amet diam et eos. Clita erat ipsum et lorem et sit, sed stet lorem sit clita duo justo magna dolore erat amet</p>
+                    <h1 class="mb-4">Bali IT Academy</h1>
+                    <p class="mb-4">Welcome to Bali IT Academy, the best place to develop your skills in Information 
+                        Technology. Whether you are a beginner looking to learn the basics of IT or a professional 
+                        looking to deepen your expertise, our courses are designed to meet your needs.</p>
+                    <h4 class="mb-4">Our Vision</h4>
+                    <p class="mb-4">At Bali IT Academy, our vision is to empower every individual with the knowledge and 
+                        skills needed to succeed in the ever-evolving IT world. We are committed to providing high-quality 
+                        training that is practical and relevant to today’s industry needs.</p>
+                    <h4 class="mb-4">Why Choose Us?</h4>
                     <div class="row gy-2 gx-4 mb-4">
                         <div class="col-sm-6">
-                            <p class="mb-0"><i class="fa fa-arrow-right text-primary me-2"></i>Skilled Instructors</p>
+                            <p class="mb-0"><i class="fa fa-arrow-right text-primary me-2"></i>Expert Instructors</p>
                         </div>
                         <div class="col-sm-6">
                             <p class="mb-0"><i class="fa fa-arrow-right text-primary me-2"></i>Online Classes</p>
                         </div>
                         <div class="col-sm-6">
-                            <p class="mb-0"><i class="fa fa-arrow-right text-primary me-2"></i>International Certificate</p>
-                        </div>
-                        <div class="col-sm-6">
                             <p class="mb-0"><i class="fa fa-arrow-right text-primary me-2"></i>Skilled Instructors</p>
                         </div>
                         <div class="col-sm-6">
-                            <p class="mb-0"><i class="fa fa-arrow-right text-primary me-2"></i>Online Classes</p>
+                            <p class="mb-0"><i class="fa fa-arrow-right text-primary me-2"></i>Flexible Learning</p>
                         </div>
                         <div class="col-sm-6">
-                            <p class="mb-0"><i class="fa fa-arrow-right text-primary me-2"></i>International Certificate</p>
-                        </div>
+                            <p class="mb-0"><i class="fa fa-arrow-right text-primary me-2"></i>National Certificate</p>
+                        </div> <br>
+                        <h6 class="mb-4">Join Bali IT Academy and take the first 
+                            step towards mastering the skills that will shape the future of technology.</h6>
                 </div>
         </div>
     </div>
@@ -103,21 +108,12 @@
                     <h4 class="text-white mb-3">Quick Link</h4>
                     <a class="btn btn-link" href="">About Us</a>
                     <a class="btn btn-link" href="">Contact Us</a>
-                    <a class="btn btn-link" href="">Privacy Policy</a>
-                    <a class="btn btn-link" href="">Terms & Condition</a>
-                    <a class="btn btn-link" href="">FAQs & Help</a>
                 </div>
                 <div class="col-lg-3 col-md-6">
                     <h4 class="text-white mb-3">Contact</h4>
-                    <p class="mb-2"><i class="fa fa-map-marker-alt me-3"></i>123 Street, New York, USA</p>
-                    <p class="mb-2"><i class="fa fa-phone-alt me-3"></i>+012 345 67890</p>
-                    <p class="mb-2"><i class="fa fa-envelope me-3"></i>info@example.com</p>
-                    <div class="d-flex justify-content pt-2">
-                        <a class="btn btn-outline-light btn-social me-2" href=""><i class="fab fa-twitter"></i></a>
-                        <a class="btn btn-outline-light btn-social me-2" href=""><i class="fab fa-facebook-f"></i></a>
-                        <a class="btn btn-outline-light btn-social me-2" href=""><i class="fab fa-youtube"></i></a>
-                        <a class="btn btn-outline-light btn-social" href=""><i class="fab fa-linkedin-in"></i></a>
-                    </div>
+                    <p class="mb-2"><i class="fa fa-globe me-3"></i>www.indoapps.id</p>
+                    <p class="mb-2"><i class="fa fa-phone-alt me-3"></i>+62 823-4087-6933</p>
+                    <p class="mb-2"><i class="fa fa-envelope me-3"></i>partners@indoapps.id</p>
                 </div>
             </div>
         </div>

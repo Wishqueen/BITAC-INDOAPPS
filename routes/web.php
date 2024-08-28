@@ -25,6 +25,9 @@ Route::get('/courses', function () {
 Route::get('/instructor', function () {
     return view('instructor');
 });
+Route::get('/detailCourse', function () {
+    return view('detailCourse');
+});
 
 Route::get('/dashboard', function () {
     return view('dashboard');
