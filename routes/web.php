@@ -13,6 +13,19 @@ use App\Http\Controllers\AuthController;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+Route::get('/index', function () {
+    return view('index');
+});
+Route::get('/about', function () {
+    return view('about');
+});
+Route::get('/courses', function () {
+    return view('courses');
+});
+Route::get('/instructor', function () {
+    return view('instructor');
+});
+
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware('auth');
