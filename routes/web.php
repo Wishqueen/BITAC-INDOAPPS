@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CourseController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,9 +20,10 @@ Route::get('/index', function () {
 Route::get('/about', function () {
     return view('pages.about');
 });
-Route::get('/courses', function () {
-    return view('pages.courses');
-});
+
+// Show the form to edit a course
+
+
 Route::get('/instructor', function () {
     return view('pages.instructor');
 });
@@ -30,7 +32,7 @@ Route::get('/detailCourse', function () {
 });
 
 Route::get('/dashboard', function () {
-    return view('dashboard');
+    return view('pages.dashboard');
 })->middleware('auth');
 
 
@@ -47,3 +49,8 @@ Route::get('/login', function () {
 Route::post('/login', [AuthController::class, 'login']);
 
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+route::resource('/course', CourseController::class);
+Route::get('/tambahCourse', [CourseController::class, 'create'])->name('course.create');
+Route::post('/tambahCourse', [CourseController::class, 'store'])->name('course.store');
+Route::get('/courses', [CourseController::class, 'index'])->name('course.index');
