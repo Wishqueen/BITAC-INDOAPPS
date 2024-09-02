@@ -14,19 +14,19 @@ use App\Http\Controllers\AuthController;
 |
 */
 Route::get('/index', function () {
-    return view('index');
+    return view('pages.index');
 });
 Route::get('/about', function () {
-    return view('about');
+    return view('pages.about');
 });
 Route::get('/courses', function () {
-    return view('courses');
+    return view('pages.courses');
 });
 Route::get('/instructor', function () {
-    return view('instructor');
+    return view('pages.instructor');
 });
 Route::get('/detailCourse', function () {
-    return view('detailCourse');
+    return view('pages.detailCourse');
 });
 
 Route::get('/dashboard', function () {
