@@ -47,10 +47,8 @@ Route::get('/login', function () {
 })->name('login');
 
 Route::post('/login', [AuthController::class, 'login']);
-
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 route::resource('/course', CourseController::class);
 Route::get('/tambahCourse', [CourseController::class, 'create'])->name('course.create');
-Route::post('/tambahCourse', [CourseController::class, 'store'])->name('course.store');
 Route::get('/courses', [CourseController::class, 'index'])->name('course.index');

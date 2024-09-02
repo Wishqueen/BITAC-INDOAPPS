@@ -47,35 +47,45 @@ class CourseController extends Controller
 public function edit($id)
 {
     $course = Course::findOrFail($id);
-    return view('courses.edit', compact('course'));
+    return view('courses.update', compact('course'));
 }
 
-// Update the course
-public function update(Request $request, $id)
+public function update(Request $request, Course $course)
 {
-    $course = Course::findOrFail($id);
-
     $request->validate([
         'title' => 'required|string|max:255',
         'price' => 'required|numeric',
         'duration' => 'required|string',
-        'instructor' => 'required|string',
+        'instructor' => 'required|string|max:255',
         'students' => 'required|integer',
+        'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         'description' => 'required|string',
-        'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
     ]);
 
-    $course->update($request->all());
-
     if ($request->hasFile('image')) {
-        $imagePath = $request->file('image')->store('images', 'public');
-        $course->image = $imagePath;
-        $course->save();
+        // Delete old image
+        if (file_exists(public_path('assets/img/' . $course->image))) {
+            unlink(public_path('assets/img/' . $course->image));
+        }
+
+        // Store new image
+        $imageName = time().'.'.$request->image->extension();  
+        $request->image->move(public_path('assets/img'), $imageName);
+        $course->image = $imageName;
     }
 
-    return redirect()->route('course.index')->with('success', 'Course updated successfully!');
-}
+    // Update course details
+    $course->update([
+        'title' => $request->title,
+        'price' => $request->price,
+        'duration' => $request->duration,
+        'instructor' => $request->instructor,
+        'students' => $request->students,
+        'description' => $request->description,
+    ]);
 
+    return redirect()->route('course.index')->with('success', 'Kursus berhasil diperbarui.');
+}
 
     public function destroy($id)
     {
