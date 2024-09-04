@@ -5,8 +5,8 @@
         <div class="container">
             <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
                 <h6 class="section-title bg-white text-center text-primary px-3">Courses</h6>
-                <h1 class="mb-5">Katalog Kursus</h1>
-                <a href="{{ route('course.create') }}" class="btn btn-success mb-4">Tambah Data</a> <!-- Tambah Data button -->
+                <h1 class="mb-5">Course Catalog</h1>
+                <a href="{{ route('course.create') }}" class="btn btn-success mb-4">Add Data</a> <!-- Tambah Data button -->
             </div>
             <div class="row g-4 justify-content-center">
                 <!-- Start of Course Box -->

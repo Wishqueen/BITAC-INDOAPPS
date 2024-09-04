@@ -20,12 +20,12 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
 
    
-    <link href="assets/lib/animate/animate.min.css" rel="stylesheet">
-    <link href="assets/lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+    <link href="{{ asset('assets/lib/animate/animate.min.css') }}" rel="stylesheet">
+    <link href="{{ asset ('assets/lib/owlcarousel/assets/owl.carousel.min.css') }}" rel="stylesheet">
 
-    <link href="assets/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{{ asset('assets/css/bootstrap.min.css') }}" rel="stylesheet">
 
-    <link href="assets/css/style.css" rel="stylesheet">
+    <link href="{{ asset ('assets/css/style.css') }}" rel="stylesheet">
 </head>
 
 <body>
@@ -55,7 +55,7 @@
     <script src="lib/owlcarousel/owl.carousel.min.js"></script>
 
     <!-- Template Javascript -->
-    <script src="assets/js/main.js"></script>
+    <script src="{{ asset ('assets/js/main.js') }}"></script>
 </body>
 
 </html>
