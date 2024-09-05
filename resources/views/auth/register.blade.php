@@ -46,6 +46,6 @@
             <button type="submit" class="btn mt-3">Register</button>
         </form>
         <div class="text-center fs-6">
-            <a href="#">Forget password?</a> or <a href="#">Sign up</a>
+            <p> <small>Already have an account? </small><a href="login">Sign in</a></p>
         </div>
     </div>

@@ -93,4 +93,11 @@ public function update(Request $request, Course $course)
         $course->delete();
         return redirect()->route('course.index')->with('success', 'Course deleted successfully.');
     }
+    
+    public function show($id)
+{
+    $course = Course::findOrFail($id);
+    return view('courses.detailCourse', compact('course'));
+}
+
 }

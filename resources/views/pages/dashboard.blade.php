@@ -1,4 +1,4 @@
-@extends('layouts.main')
+@extends('layouts.main2')
 @section('konten')
     
     <div class="container-xxl py-5">
