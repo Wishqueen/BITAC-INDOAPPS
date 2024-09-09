@@ -5,7 +5,7 @@
     <div class="container">
         <div class="text-center mb-5">
             <h6 class="section-title bg-white text-center text-primary px-3">Edit Instructor</h6>
-            <h1 class="mb-5">Edit Instructor</h1>
+            <h1 class="mb-5">Update Instructor</h1>
         </div>
 
         @if(session('success'))

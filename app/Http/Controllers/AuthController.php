@@ -41,20 +41,24 @@ class AuthController extends Controller
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
-            return redirect()->intended('dashboard');
+            return redirect()->intended('courses');
         }
 
         return back()->with('error', 'email and password are incorrect!');
     }
 
     // Logout
-    public function logout(Request $request)
-    {
-        Auth::logout();
+public function logout(Request $request)
+{
+    
+    Auth::logout();
 
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
+    $request->session()->invalidate();
+    
+    $request->session()->regenerateToken();
+    
+    return redirect('/index');
+}
 
-        return redirect('/');
-    }
+    
 }

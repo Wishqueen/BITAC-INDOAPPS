@@ -9,6 +9,7 @@ class CourseController extends Controller
     public function index()
     {
         $courses = Course::all(); // or use pagination if you have many courses
+        $courses = Course::paginate(6);
         return view('courses.courses', compact('courses'));
     }
     public function create()

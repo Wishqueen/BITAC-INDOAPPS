@@ -17,4 +17,12 @@ class course extends Model
             'image',
             'description',
     ] ;
+    public function learningMaterials()
+    {
+        return $this->hasMany(learning_materials::class);
+    }
+    public function users()
+    {
+        return $this->hasMany(User::class);
+    }
 }

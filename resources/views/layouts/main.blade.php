@@ -35,8 +35,13 @@
             <span class="sr-only">Loading...</span>
         </div>
     </div>
-   
-    @include('layouts.navbar')
+   @auth
+        @include('layouts.navbar2')
+
+    @else
+        @include('layouts.navbar')
+   @endauth
+   @include('layouts.sidebar')
     
     <!-- Navbar End -->
 

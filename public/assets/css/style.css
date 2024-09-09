@@ -559,3 +559,5 @@ body {
     object-fit: cover; /* Ensures the image covers the entire area */
     object-position: center; /* Centers the image */
 }
+/* Ensure the profile button is aligned to the right */
+
