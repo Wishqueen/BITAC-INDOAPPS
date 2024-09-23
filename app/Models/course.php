@@ -25,4 +25,18 @@ class course extends Model
     {
         return $this->hasMany(User::class);
     }
+    public function certifications()
+{
+    return $this->hasMany(Certification::class);
+}
+
+public function user()
+{
+    return $this->belongsToMany(User::class);
+}
+public function students()
+{
+    return $this->hasMany(Student::class);
+}
+
 }

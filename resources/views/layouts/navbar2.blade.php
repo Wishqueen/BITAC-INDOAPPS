@@ -29,7 +29,7 @@
             <div class="navbar-nav ms-auto p-4 p-lg-0">
                 <a href="{{ url('/my-courses') }}"
                     class="nav-item nav-link {{ Request::is('my-courses') ? 'active' : '' }}">My Courses</a>
-                    <a href="{{ url('/cart') }}" class="nav-item nav-link {{ Request::is('cart') ? 'active' : '' }}" style="position: relative;">
+                    {{-- <a href="{{ url('/cart') }}" class="nav-item nav-link {{ Request::is('cart') ? 'active' : '' }}" style="position: relative;">
                         <i class="fa fa-shopping-cart"></i>
                         Cart
                         @if(count(session('cart', [])) > 0)
@@ -37,7 +37,7 @@
                                 {{ count(session('cart', [])) }}
                             </span>
                         @endif
-                    </a>
+                    </a> --}}
                 {{-- <button class="btn btn-primary py-2 px-lg-4 {{ Request::is('profile') ? 'active' : '' }}"
                     data-bs-toggle="offcanvas" data-bs-target="#sidebarProfile">
                     <i class="fa fa-bars"></i> Profile

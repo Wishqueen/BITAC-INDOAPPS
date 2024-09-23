@@ -1,4 +1,4 @@
-<div class="wrapper">
+{{-- <div class="wrapper">
 <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
 
         <div class="logo">
@@ -17,16 +17,6 @@
                 <span class="fas fa-key"></span>
                 <input type="email" name="email" id="email" placeholder="Email" required>
             </div>
-            {{-- <div class="form-field d-flex align-items-center">
-                <span class="fas fa-key"></span>
-                <input type="password" name="password" id="password" class="form-control @error('password') is-invalid @enderror" placeholder="Password" required>
-
-                @error('password')
-                <span class="invalid-feedback" role="alert" style="color: red">
-                    <span>{{ $message }}</span>
-                </span>
-            @enderror
-            </div> --}}
             <div class="form-field d-flex align-items-center">
                 <span class="fas fa-key"></span>
                 <input type="password" name="password" id="password" 
@@ -48,4 +38,54 @@
         <div class="text-center fs-6">
             <p> <small>Already have an account? </small><a href="login">Sign in</a></p>
         </div>
+    </div> --}}
+
+    <div class="wrapper">
+        <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
+    
+        <div class="logo">
+            <img src="{{ asset('assets/img/bitac.png') }}" alt="">
+        </div>
+        <div class="text-center mt-4 name">
+            Register
+        </div>
+        <form class="p-3 mt-3" method="POST" action="{{ route('register') }}">
+            @csrf
+            <div class="form-field d-flex align-items-center">
+                <span class="far fa-user"></span>
+                <input type="text" name="name" id="name" placeholder="Name" required>
+            </div>
+            <div class="form-field d-flex align-items-center">
+                <span class="fas fa-key"></span>
+                <input type="email" name="email" id="email" placeholder="Email" required>
+            </div>
+            <div class="form-field d-flex align-items-center">
+                <span class="fas fa-key"></span>
+                <input type="password" name="password" id="password" 
+                       class="form-control @error('password') is-invalid @enderror" 
+                       placeholder="Password" required>
+            
+                @error('password')
+                    <span class="invalid-feedback error-message" role="alert">
+                        {{ $message }}
+                    </span>
+                @enderror
+            </div>
+            <div class="form-field d-flex align-items-center">
+                <span class="fas fa-key"></span>
+                <input type="password" name="password_confirmation" placeholder="Confirm Password" required>
+            </div>
+            <div class="form-field d-flex align-items-center">
+                <span class="fas fa-user-tag"></span>
+                <select name="role" id="role" style="border: none; background: transparent; padding: 0.375rem 0.75rem; font-size: 1rem; color: #495057; width: 100%;" required>
+                    <option value="student">Student</option>
+                    <option value="instructor">instructor</option>
+                </select>
+            </div>
+            <button type="submit" class="btn mt-3">Register</button>
+        </form>
+        <div class="text-center fs-6">
+            <p> <small>Already have an account? </small><a href="login">Sign in</a></p>
+        </div>
     </div>
+    

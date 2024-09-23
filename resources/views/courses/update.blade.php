@@ -16,7 +16,7 @@
 
         <div class="card shadow-sm border-0 rounded-lg">
             <div class="card-header bg-primary text-white">
-                <h3 class="mb-0">Course Details</h3>
+                <h3 class="mb-0">Program Details</h3>
             </div>
             <div class="card-body p-4">
                 <form action="{{ route('course.update', $course->id) }}" method="POST" enctype="multipart/form-data">
@@ -24,7 +24,7 @@
                     @method('PUT')
 
                     <div class="mb-3">
-                        <label for="title" class="form-label">Course Title</label>
+                        <label for="title" class="form-label">Program Title</label>
                         <input type="text" class="form-control" id="title" name="title" value="{{ old('title', $course->title) }}" placeholder="Masukkan judul kursus" required>
                     </div>
 
@@ -34,7 +34,7 @@
                     </div>
 
                     <div class="mb-3">
-                        <label for="duration" class="form-label">Course Duration</label>
+                        <label for="duration" class="form-label">Program Duration</label>
                         <input type="text" class="form-control" id="duration" name="duration" value="{{ old('duration', $course->duration) }}" placeholder="Masukkan durasi kursus" required>
                     </div>
 
@@ -49,7 +49,7 @@
                     </div>
 
                     <div class="mb-3">
-                        <label for="image" class="form-label">Course Image</label>
+                        <label for="image" class="form-label">Program Image</label>
                         <input type="file" class="form-control" id="image" name="image">
                         @if($course->image)
                             <img src="{{ asset('assets/img/' . $course->image) }}" alt="Current Image" class="img-thumbnail mt-2" style="max-height: 150px;">

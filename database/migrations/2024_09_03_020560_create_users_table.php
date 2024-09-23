@@ -22,7 +22,7 @@ return new class extends Migration
             $table->text('address')->nullable();
             $table->string('phone')->nullable();
             $table->date('date_of_birth')->nullable();
-            $table->enum('role', ['User', 'Mentor', 'Admin']) ->default('User');
+            $table->enum('role', ['student', 'instructor', 'Admin']) ->default('student');
             $table->foreignId('course_id')->nullable()->constrained('courses')->onDelete('cascade');
             $table->rememberToken();
             $table->timestamps();

@@ -3,6 +3,8 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+
+use App\Notifications\CustomResetPassword;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -28,6 +30,7 @@ class User extends Authenticatable
          'email_verified_at',
          'password',
          'course_id',
+         'role',
 
     ];
     
@@ -54,4 +57,21 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Course::class);
     }
+    public function attendances()
+{
+    return $this->hasMany(Attendance::class);
+}
+public function certifications()
+{
+    return $this->hasMany(Certification::class);
+}
+public function students()
+{
+    return $this->hasMany(Student::class);
+}
+public function courses()
+{
+    // This assumes each student can have multiple courses through the students table
+    return $this->hasManyThrough(Course::class, Student::class, 'user_id', 'id', 'id', 'course_id');
+}
 }

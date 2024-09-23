@@ -8,10 +8,10 @@
     <div class="collapse navbar-collapse" id="navbarCollapse">
         <div class="navbar-nav ms-auto p-4 p-lg-0">
             <a href="{{ url('/index') }}" class="nav-item nav-link {{ Request::is('index') ? 'active' : '' }}">Home</a>
-            <a href="{{ url('/about') }}" class="nav-item nav-link {{ Request::is('about') ? 'active' : '' }}">About</a>
-            <a href="{{ url('/courses') }}" class="nav-item nav-link {{ Request::is('courses') ? 'active' : '' }}">Courses</a>
+            <a href="{{ url('/courses') }}" class="nav-item nav-link {{ Request::is('courses') ? 'active' : '' }}">Program</a>
             <a href="{{ url('/instructor') }}" class="nav-item nav-link {{ Request::is('instructor') ? 'active' : '' }}">Instructor</a>
-            <a href="{{ url('/cart') }}" class="nav-item nav-link {{ Request::is('cart') ? 'active' : '' }}" style="position: relative;">
+            <a href="{{ url('/student') }}" class="nav-item nav-link {{ Request::is('student') ? 'active' : '' }}">Student</a>
+            {{-- <a href="{{ url('/cart') }}" class="nav-item nav-link {{ Request::is('cart') ? 'active' : '' }}" style="position: relative;">
                 <i class="fa fa-shopping-cart"></i>
                 Cart
                 @if(count(session('cart', [])) > 0)
@@ -19,7 +19,7 @@
                         {{ count(session('cart', [])) }}
                     </span>
                 @endif
-            </a>
+            </a> --}}
         </div>
         <a href="{{ url('/login') }}" class="btn btn-primary py-4 px-lg-4 d-none d-lg-block {{ Request::is('login') ? 'active' : '' }}">Login</a>
         <a href="{{ url('/register') }}" class="btn btn-secondary py-4 px-lg-4 d-none d-lg-block {{ Request::is('register') ? 'active' : '' }}">Register</a>

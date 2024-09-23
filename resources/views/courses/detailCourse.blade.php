@@ -30,9 +30,9 @@
                     <div class="total mb-4">
                         <h4>Total: ${{ number_format($course->price, 2) }}</h4>
                         <div class="main-border-button">
-                            <form action="{{ route('cart.add', $course->id) }}" method="POST">
+                            <form action="{{ route('login') }}" method="GET">
                                 @csrf
-                                <button type="submit" class="btn btn-primary w-100">Add To Cart</button>
+                                <button type="submit" class="btn btn-primary w-100">Join Program</button>
                             </form>
                         </div>
                         

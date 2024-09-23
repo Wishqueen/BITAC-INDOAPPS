@@ -17,12 +17,12 @@
                 <span class="fas fa-key"></span>
                 <input type="password" name="password" id="password" placeholder="Password">
             </div>
-            @if(session('error'))
-            <div style="color: red">{{ session('error') }}</div>
+            @if($errors->has('error'))
+            <div style="color: red">{{ $errors->first('error') }}</div>
         @endif
             <button class="btn mt-3">Login</button>
         </form>
         <div class="text-center fs-6">
-            <a href="#">Forget password?</a> or <a href="register">Sign up</a>
+            <a href="forgot-password">Forget password?</a> or <a href="register">Sign up</a>
         </div>
     </div>

@@ -7,7 +7,7 @@
                 <h6 class="section-title bg-white text-center text-primary px-3">Search Results</h6>
                 <h1 class="mb-5">Results for "{{ $query }}"</h1>
                 @if ($courses->isEmpty())
-                    <p class="mb-4">No courses found.</p>
+                    <p class="mb-4">No program found.</p>
                 @endif
             </div>
             <div class="row g-4 justify-content-center">

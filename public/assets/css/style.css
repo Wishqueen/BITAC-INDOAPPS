@@ -561,3 +561,17 @@ body {
 }
 /* Ensure the profile button is aligned to the right */
 
+
+    #calendar {
+        max-width: 100%; /* Lebar maksimum kalender diatur menjadi 100% */
+        margin: 0 auto;
+        height: 500px;    /* Tinggi kalender */
+    }
+
+    @media (max-width: 768px) {
+        #calendar {
+            height: 400px; /* Tinggi kalender pada layar kecil */
+        }
+    }
+
+
