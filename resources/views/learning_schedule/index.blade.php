@@ -3,6 +3,9 @@
 @section('konten')
 <br><br>
 <div class="container">
+    @auth
+    
+    @if(Auth::user()->role === 'Admin')
     <h2 style="text-align: center">Learning Schedule</h2>
 
     @if(session('success'))
@@ -34,11 +37,12 @@
 
         <button type="submit" class="btn btn-primary">Add Schedule</button>
     </form>
-
-    <h2 class="mt-4" style="text-align: center">Calendar</h2>
+    @endif
+    @if(Auth::user()->role === 'instructor' || Auth::user()->role === 'student' || Auth::user()->role === 'Admin')
+    <h2 class="mt-4" style="text-align: center">Schedule</h2>
     <div id="calendar" style="max-width: 800px; margin: 0 auto; height: 600px;"></div>
 
-
+    @if(Auth::user()->role === 'Admin')
     <div class="modal fade" id="updateModal" tabindex="-1" aria-labelledby="updateModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -79,8 +83,7 @@
         </div>
     </div>
 </div>
-
-
+@endif
 <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/core@6.0.0/main.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid@6.0.0/main.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -119,6 +122,7 @@ document.addEventListener('DOMContentLoaded', function() {
     calendar.render();
 });
 </script>
-
+@endif
+@endauth
 @endsection
 

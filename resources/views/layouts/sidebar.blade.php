@@ -30,7 +30,7 @@
         <!-- Menu Items -->
         <ul class="navbar-nav flex-grow-1">
             @auth
-                @if(Auth::user()->role === 'student' || Auth::user()->role === 'Admin')
+                @if(Auth::user()->role === 'student' || Auth::user()->role === 'Admin' || Auth::user()->role === 'instructor')
                     <li class="nav-item mb-2">
                         <a class="nav-link text-black d-flex align-items-center" href="{{ url('/courses/{id}/materials') }}">
                             <i class="fa fa-book me-2" style="font-size: 16px;"></i> Learning Materials
@@ -57,6 +57,9 @@
                             <i class="fa fa-users me-2" style="font-size: 16px;"></i> Student Data
                         </a>
                     </li>
+                    @endif
+
+                    @if(Auth::user()->role === 'instructor' || Auth::user()->role === 'student'|| Auth::user()->role === 'Admin')
                     <li class="nav-item mb-2">
                         <a class="nav-link text-black d-flex align-items-center" href="{{ url('/attendance') }}">
                             <i class="fa fa-calendar-check me-2" style="font-size: 16px;"></i> Attendance
@@ -67,12 +70,15 @@
                             <i class="fa fa-calendar-alt me-2" style="font-size: 16px;"></i> Learning Schedule
                         </a>
                     </li>
+                    @endif
+
+                    @if(Auth::user()->role === 'instructor')
                     <li class="nav-item mb-2">
                         <a class="nav-link text-black d-flex align-items-center" href="{{ url('/evaluation') }}">
                             <i class="fa fa-chart-bar me-2" style="font-size: 16px;"></i> Evaluation
                         </a>
                     </li>
-                @endif
+                 @endif
             @endauth
         </ul>
 

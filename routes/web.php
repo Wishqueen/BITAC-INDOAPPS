@@ -100,8 +100,11 @@ Route::middleware('auth')->group(function() {
     Route::resource('learning-schedule', LearningScheduleController::class);
     Route::post('/learning-schedule/update/{id}', [LearningScheduleController::class, 'update'])->name('learning-schedule.update');
     
+    Route::get('/certifications', [CertificationController::class, 'index'])->name('certifications.index');
+    Route::get('/certifications/{id}', [CertificationController::class, 'show'])->name('certifications.show');
     Route::resource('certifications', CertificationController::class);
-    Route::post('/certifications', [CertificationController::class, 'store'])->name('certifications.store');
+    Route::get('/certificate/download/{id}', [CertificationController::class, 'download'])->name('certificate.download');
+    Route::get('/get-users-by-course', [CertificationController::class, 'getUsersByCourse'])->name('get.users.by.course');
 
     Route::get('/students', [StudentController::class, 'index'])->name('students.index');
 

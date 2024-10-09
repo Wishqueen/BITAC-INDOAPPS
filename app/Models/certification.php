@@ -11,11 +11,15 @@ class certification extends Model
     protected $fillable = [
         'user_id',
         'course_id',
+        'certificate_number',
         'title',
         'description',
         'image',
+        'date'
     ];
-
+    protected $casts = [
+        'date' => 'date', // Automatically cast the date to Carbon
+    ];
     /**
      * Get the user that owns the certification.
      */
@@ -31,4 +35,9 @@ class certification extends Model
     {
         return $this->belongsTo(Course::class);
     }
+    public function students()
+{
+    return $this->belongsToMany(User::class, 'student_certifications')->withTimestamps();
+}
+
 }

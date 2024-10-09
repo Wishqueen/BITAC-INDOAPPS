@@ -74,4 +74,10 @@ public function courses()
     // This assumes each student can have multiple courses through the students table
     return $this->hasManyThrough(Course::class, Student::class, 'user_id', 'id', 'id', 'course_id');
 }
+public function certification()
+{
+    return $this->belongsToMany(Certification::class, 'student_certifications')->withTimestamps();
+}
+
+
 }

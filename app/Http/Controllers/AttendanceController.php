@@ -11,43 +11,46 @@ use Carbon\Carbon;
 class AttendanceController extends Controller
 {
     // Tampilkan form absensi
-    public function index(Request $request)
-    {
-        $roles = ['Student', 'Mentor']; // Ganti sesuai role Anda
-        $dateFilter = $request->input('date');
-        $roleFilter = $request->input('role');
 
-        $attendances = Attendance::with('user')
-            ->when($dateFilter, function ($query, $dateFilter) {
-                return $query->whereDate('date', $dateFilter);
-            })
-            ->when($roleFilter, function ($query, $roleFilter) {
-                return $query->whereHas('user', function ($q) use ($roleFilter) {
-                    $q->where('role', $roleFilter);
-                });
-            })
-            ->get();
+public function index(Request $request)
+{
+    $roles = ['instructor', 'student', 'Admin']; // Only show these roles in the filter
+    $attendances = Attendance::query()
+        ->with('user')
+        ->when($request->date, function ($query, $date) {
+            return $query->whereDate('date', $date);
+        })
+        ->when($request->role, function ($query, $role) {
+            return $query->whereHas('user', function ($query) use ($role) {
+                $query->where('role', $role);
+            });
+        })
+        ->get();
 
-        return view('attendance.index', compact('attendances', 'roles'));
+    return view('attendance.index', compact('attendances', 'roles'));
+}
+
+public function store(Request $request)
+{
+    // Only allow 'student' and 'instructor' roles to submit attendance
+    if (auth()->user()->role !== 'student' && auth()->user()->role !== 'instructor') {
+        return redirect()->route('attendance.index')->with('error', 'You are not authorized to submit attendance.');
     }
 
-    // Proses input absensi
-    public function store(Request $request)
-    {
-        $request->validate([
-            'status' => 'required',
-            'reason' => 'required_if:status,Tidak Hadir',
-        ]);
+    $request->validate([
+        'status' => 'required',
+        'reason' => 'nullable|string',
+    ]);
 
-        Attendance::create([
-            'user_id' => Auth::id(),
-            'date' => Carbon::today(),
-            'status' => $request->status,
-            'reason' => $request->reason,
-        ]);
+    Attendance::create([
+        'user_id' => auth()->id(),
+        'date' => now(),
+        'status' => $request->status,
+        'reason' => $request->status === 'Tidak Hadir' ? $request->reason : null,
+    ]);
 
-        return redirect()->back()->with('success', 'Attendance recorded successfully.');
-    }
+    return redirect()->route('attendance.index')->with('success', 'Attendance submitted successfully.');
+}
 
     // Unduh laporan absensi
     public function downloadReport(Request $request)

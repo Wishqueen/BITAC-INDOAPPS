@@ -1,115 +1,169 @@
-<?php
+<?php 
 namespace App\Http\Controllers;
 
 use App\Models\certification;
 use App\Models\course;
+use App\Models\User;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 
 class CertificationController extends Controller
 {
     // Menampilkan halaman daftar sertifikasi dan kursus
-    public function index()
-    {
-        $certifications = Certification::with('course')->get();
-        $courses = Course::all();
-        return view('certifications.index', compact('certifications', 'courses'));
-    }
-       
+// In your Controller
+public function index()
+{
+    // Fetch all certifications and related courses
+    $certifications = Certification::when(Auth::user()->role == 'student', function($query) {
+        $query->where('course_id', Auth::user()->course_id);
+    })->get();
 
-    // Menyimpan sertifikasi baru ke database
-    public function store(Request $request)
-    {
-        // Validasi input
-        $validatedData = $request->validate([
-            'title' => 'required|string|max:255',
-            'description' => 'required|string',
-            'image' => 'required|image|mimes:jpeg,png,jpg|max:2048',
-            'course_id' => 'required|exists:courses,id', // Validasi course_id
-        ]);
+    // Fetch all users (or filter as needed)
+    $users = User::all();
 
-        // Simpan gambar ke direktori public/images dan dapatkan path-nya
-        $imagePath = $this->saveImage($request->file('image'));
+    // Fetch all courses
+    $courses = Course::all();
 
-        // Buat sertifikasi baru dengan data yang tervalidasi
-        Certification::create([
-            'title' => $validatedData['title'],
-            'description' => $validatedData['description'],
-            'image' => $imagePath,
-            'user_id' => Auth::id(), // Ambil user_id dari user yang sedang login
-            'course_id' => $validatedData['course_id'], // Ambil course_id dari input
-        ]);
+    // Pass the data to the view
+    return view('certifications.index', compact('certifications', 'users', 'courses'));
+}
 
-        // Redirect ke halaman index sertifikasi dengan notifikasi sukses
-        return redirect()->route('certifications.index')->with('success', 'Certification added successfully.');
-    }
+public function store(Request $request)
+{
+    // Validate the incoming request data
+    $validator = Validator::make($request->all(), [
+        'course_id' => 'required|exists:courses,id',
+        'user_id' => 'required|exists:users,id',
+        'certificate_number' => 'required|string|max:255',
+        'description' => 'required|string|max:255',
+        'date' => 'required|date',
+    ]);
 
-    // Mengupdate sertifikasi yang sudah ada
-    public function update(Request $request, $id)
-    {
-        // Validasi input
-        $validatedData = $request->validate([
-            'title' => 'required|string|max:255',
-            'description' => 'required|string',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
-            'course_id' => 'required|exists:courses,id',
-        ]);
-
-        // Cari sertifikasi yang akan diupdate
-        $certification = Certification::findOrFail($id);
-
-        // Jika ada gambar baru yang diupload, simpan dan hapus gambar lama
-        if ($request->hasFile('image')) {
-            // Hapus gambar lama
-            $this->deleteImage($certification->image);
-
-            // Simpan gambar baru
-            $imagePath = $this->saveImage($request->file('image'));
-            $certification->image = $imagePath;
-        }
-
-        // Update sertifikasi dengan data yang baru
-        $certification->update([
-            'title' => $validatedData['title'],
-            'description' => $validatedData['description'],
-            'course_id' => $validatedData['course_id'],
-        ]);
-
-        return redirect()->route('certifications.index')->with('success', 'Certification updated successfully.');
+    if ($validator->fails()) {
+        return redirect()->back()
+            ->withErrors($validator)
+            ->withInput();
     }
 
-    // Menghapus sertifikasi
-    public function destroy($id)
-    {
-        // Cari sertifikasi yang akan dihapus
-        $certification = Certification::findOrFail($id);
+    // Create the certification
+    Certification::create([
+        'course_id' => $request->course_id,
+        'user_id' => $request->user_id,
+        'certificate_number' => $request->certificate_number, // Add certificate number to the creation array
+        'description' => $request->description,
+        'date' => $request->date,
+    ]);
 
-        // Hapus gambar
-        $this->deleteImage($certification->image);
+    // Redirect back with a success message
+    return redirect()->route('certifications.index')->with('success', 'Certification created successfully!');
+}
 
-        // Hapus data sertifikasi dari database
-        $certification->delete();
 
-        return redirect()->route('certifications.index')->with('success', 'Certification deleted successfully.');
+// Display a specific certification for the user
+public function show($id)
+{
+    $certification = Certification::findOrFail($id);
+
+    // Memastikan hanya user yang memiliki sertifikasi atau admin yang bisa melihat detail
+    if (Auth::user()->role != 'Admin' && Auth::user()->id != $certification->user_id) {
+        abort(403, 'Unauthorized action.');
     }
 
-    // Fungsi untuk menyimpan gambar ke direktori public/images
-    private function saveImage($image)
-    {
-        $imageName = time() . '.' . $image->getClientOriginalExtension();
-        $destinationPath = public_path('/images');
-        $image->move($destinationPath, $imageName);
-        return 'images/' . $imageName;
+    // Mengembalikan view dengan data sertifikasi
+    return view('certifications.show', compact('certification'));
+}
+
+public function edit($id)
+{
+    $certification = Certification::findOrFail($id);
+    
+    // Check if the user is an admin
+    if (Auth::user()->role !== 'Admin') {
+        return redirect()->route('certifications.index')->with('error', 'Unauthorized action.');
     }
 
-    // Fungsi untuk menghapus gambar dari direktori public/images
-    private function deleteImage($imagePath)
-    {
-        $fullImagePath = public_path($imagePath);
+    // Get the list of courses and users to pass to the view
+    $courses = Course::all();
+    $users = User::all(); // Assuming you have a User model
 
-        // Cek apakah file ada sebelum menghapus
-        if (file_exists($fullImagePath)) {
-            unlink($fullImagePath);
-        }
+    return view('certifications.edit', compact('certification', 'courses', 'users'));
+}
+
+public function update(Request $request, $id)
+{
+    $validator = Validator::make($request->all(), [
+        'course_id' => 'required|exists:courses,id',
+        'user_id' => 'required|exists:users,id',
+        'description' => 'required|string|max:255',
+        'date' => 'required|date',
+        'certificate_number' => 'required|string|max:255',
+    ]);
+
+    if ($validator->fails()) {
+        return redirect()->back()
+            ->withErrors($validator)
+            ->withInput();
     }
+
+    // Check if the user is an admin
+    if (Auth::user()->role !== 'Admin') {
+        return redirect()->route('certifications.index')->with('error', 'Unauthorized action.');
+    }
+
+    // Update the certification
+    $certification = Certification::findOrFail($id);
+    $certification->update([
+        'course_id' => $request->course_id,
+        'user_id' => $request->user_id,
+        'description' => $request->description,
+        'date' => $request->date,
+        'certificate_number' => $request->certificate_number,
+    ]);
+
+    return redirect()->route('certifications.index')->with('success', 'Certification updated successfully!');
+}
+
+// Method untuk menghapus sertifikasi
+public function destroy($id)
+{
+    $certification = Certification::findOrFail($id);
+
+    // Memastikan hanya admin yang bisa menghapus
+    if (Auth::user()->role != 'Admin') {
+        abort(403, 'Unauthorized action.');
+    }
+
+    $certification->delete();
+
+    return redirect()->route('certifications.index')->with('success', 'Certification deleted successfully.');
+}
+
+    public function download($id)
+    {
+        $certification = Certification::with('user', 'course')->findOrFail($id);
+    
+        // Format tanggal jika ada
+        $formattedDate = $certification->date 
+            ? Carbon::parse($certification->date)->format('F j, Y') 
+            : 'Date not provided';
+    
+        // Buat PDF dengan variabel tambahan $formattedDate
+        $pdf = Pdf::loadView('certifications.download', compact('certification', 'formattedDate'))
+            ->setPaper('f4', 'landscape')->setOption('margin-bottom', 0);;
+    
+        return $pdf->download('certificate_' . $certification->user->name . '.pdf');
+    }
+
+    public function getUsersByCourse(Request $request)
+{
+    $courseId = $request->input('course_id');
+    
+    // Fetch users associated with the selected course
+    $users = User::where('course_id', $courseId)->get(); // Adjust this query based on your actual relationship
+
+    return response()->json(['users' => $users]);
+}
 }
