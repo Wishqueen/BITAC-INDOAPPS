@@ -14,7 +14,7 @@
             <div class="col-lg-4">
                 <div class="right-content">
                     <h4 class="mb-3">{{ $course->title }}</h4>
-                    <span class="price h5 text-primary mb-3">${{ number_format($course->price, 2) }}</span>
+                    <span class="price h5 text-primary mb-3">Rp{{ number_format($course->price, 2) }}</span>
                     <ul class="stars list-unstyled d-flex mb-3">
                         @for($i = 0; $i < 5; $i++)
                             <li class="me-1">
@@ -28,15 +28,45 @@
                         <p class="mb-0">Unlock the secrets of {{ $course->title }} and elevate your digital creations to new heights.</p>
                     </div>
                     <div class="total mb-4">
-                        <h4>Total: ${{ number_format($course->price, 2) }}</h4>
-                        <div class="main-border-button">
-                            <form action="{{ route('login') }}" method="GET">
-                                @csrf
-                                <button type="submit" class="btn btn-primary w-100">Join Program</button>
-                            </form>
-                        </div>
-                        
-                        
+                        <h4>Total: Rp{{ number_format($course->price, 2) }}</h4>
+
+                        <!-- Kondisi jika role user adalah student -->
+                        @if(Auth::user()->role === 'student')
+                            <div class="main-border-button">
+                                @php
+                                    $cart = session('cart');
+                                    $inCart = isset($cart[$course->id]);
+
+                                    // Cek apakah user sudah memiliki transaksi yang dikonfirmasi untuk kursus ini
+                                    $transactionFinished = \App\Models\TransactionItem::whereHas('transaction', function($query) {
+                                        $query->where('user_id', auth()->id())
+                                              ->where('status', 'settlement');
+                                    })->where('course_id', $course->id)->exists();
+                                @endphp
+
+                                <!-- Disable button jika jumlah siswa = 0 -->
+                                @if($course->students <= 0)
+                                    <button class="btn btn-secondary w-100" disabled>
+                                        Students Full
+                                    </button>
+                                @elseif($inCart)
+                                    <button class="btn btn-secondary w-100" disabled>
+                                        Already in Cart
+                                    </button>
+                                @elseif($transactionFinished)
+                                    <button class="btn btn-secondary w-100" disabled>
+                                        Already Purchased
+                                    </button>
+                                @else
+                                    <form action="{{ route('cart.add', $course->id) }}" method="POST">
+                                        @csrf
+                                        <button type="submit" class="btn btn-primary w-100">
+                                            Add to Cart
+                                        </button>
+                                    </form>
+                                @endif
+                            </div>
+                        @endif
                     </div>
                 </div>
             </div>

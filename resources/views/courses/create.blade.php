@@ -37,10 +37,6 @@
                         <input type="text" class="form-control" id="duration" name="duration" placeholder="Masukkan durasi kursus" required>
                     </div>
 
-                    <div class="mb-3">
-                        <label for="instructor" class="form-label">Instructor Name</label>
-                        <input type="text" class="form-control" id="instructor" name="instructor" placeholder="Masukkan nama instruktur" required>
-                    </div>
 
                     <div class="mb-3">
                         <label for="students" class="form-label">Number of Students</label>

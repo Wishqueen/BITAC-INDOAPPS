@@ -11,14 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-            Schema::create('learning_schedules', function (Blueprint $table) {
-                $table->id();
-                $table->string('title'); // Judul kegiatan
-                $table->text('description')->nullable(); // Deskripsi kegiatan
-                $table->dateTime('start'); // Waktu mulai
-                $table->dateTime('end');  // Waktu berakhir
-                $table->timestamps();
-            });
+        Schema::create('learning_schedules', function (Blueprint $table) {
+            $table->id();
+            $table->date('date'); // Day of the week
+            $table->foreignId('course_id')->constrained('courses')->onDelete('cascade'); // Foreign key to courses table
+            $table->text('material')->nullable(); // Material for the schedule
+            $table->time('start_time');
+            $table->time('end_time');  // Time for the schedule
+            $table->foreignId('instructor_id')->constrained('users')->onDelete('cascade'); // Foreign key to users table for instructor
+            $table->timestamps();
+        });
         
     }
 

@@ -3,122 +3,168 @@
 @section('konten')
 <br><br>
 <div class="container">
+    @auth
+    @if(Auth::user()->role === 'Admin')
     <h2 style="text-align: center">Learning Schedule</h2>
 
     @if(session('success'))
         <div class="alert alert-success">{{ session('success') }}</div>
     @endif
 
-
-    <form action="{{ route('learning-schedule.store') }}" method="POST">
-        @csrf
-        <div class="mb-3">
-            <label for="title" class="form-label">Title</label>
-            <input type="text" class="form-control" id="title" name="title" required>
-        </div>
-
-        <div class="mb-3">
-            <label for="description" class="form-label">Description</label>
-            <textarea class="form-control" id="description" name="description"></textarea>
-        </div>
-
-        <div class="mb-3">
-            <label for="start" class="form-label">Start Time</label>
-            <input type="datetime-local" class="form-control" id="start" name="start" required>
-        </div>
-
-        <div class="mb-3">
-            <label for="end" class="form-label">End Time</label>
-            <input type="datetime-local" class="form-control" id="end" name="end" required>
-        </div>
-
-        <button type="submit" class="btn btn-primary">Add Schedule</button>
-    </form>
-
-    <h2 class="mt-4" style="text-align: center">Calendar</h2>
-    <div id="calendar" style="max-width: 800px; margin: 0 auto; height: 600px;"></div>
-
-
-    <div class="modal fade" id="updateModal" tabindex="-1" aria-labelledby="updateModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="updateModalLabel">Update Schedule</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    <div class="container mt-5">
+        <form action="{{ route('learning-schedule.store') }}" method="POST" class="shadow p-4 rounded bg-light">
+            @csrf
+            
+            @if ($errors->any())
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
                 </div>
-                <div class="modal-body">
-                    <form id="updateForm" method="POST" action="">
-                        @csrf
-                        @method('POST')
-                        <input type="hidden" id="updateId" name="id">
-
-                        <div class="mb-3">
-                            <label for="updateTitle" class="form-label">Title</label>
-                            <input type="text" class="form-control" id="updateTitle" name="title" required>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="updateDescription" class="form-label">Description</label>
-                            <textarea class="form-control" id="updateDescription" name="description"></textarea>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="updateStart" class="form-label">Start Time</label>
-                            <input type="datetime-local" class="form-control" id="updateStart" name="start" required>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="updateEnd" class="form-label">End Time</label>
-                            <input type="datetime-local" class="form-control" id="updateEnd" name="end">
-                        </div>
-
-                        <button type="submit" class="btn btn-primary">Update Schedule</button>
-                    </form>
+            @endif
+    
+            <div class="mb-3">
+                <label for="date" class="form-label">Date</label>
+                <input type="date" class="form-control" id="date" name="date" required>
+            </div>
+    
+            <div class="mb-3">
+                <label for="course_id" class="form-label">Course</label>
+                <select class="form-select" id="course_id" name="course_id" required>
+                    <option value="" disabled selected>Select a course</option>
+                    @foreach($courses as $course)
+                        <option value="{{ $course->id }}">{{ $course->title }}</option>
+                    @endforeach
+                </select>
+            </div>
+    
+            <div class="mb-3">
+                <label for="material" class="form-label">Material</label>
+                <textarea class="form-control" id="material" name="material" rows="3"></textarea>
+            </div>
+    
+            <div class="row mb-3">
+                <div class="col">
+                    <label for="start_time" class="form-label">Start Time</label>
+                    <input type="time" class="form-control" id="start_time" name="start_time" required>
+                </div>
+                <div class="col">
+                    <label for="end_time" class="form-label">End Time</label>
+                    <input type="time" class="form-control" id="end_time" name="end_time" required>
                 </div>
             </div>
+    
+            <div class="mb-3">
+                <label for="instructor_id" class="form-label">Instructor Name</label>
+                <select class="form-select" id="instructor_id" name="instructor_id" required>
+                    <option value="" disabled selected>Select an instructor</option>
+                    @foreach($instructors as $instructor)
+                        <option value="{{ $instructor->id }}">{{ $instructor->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+    
+            <button type="submit" class="btn btn-primary">Add Schedule</button>
+        </form>
+    </div>
+    @endif <!-- Close Admin Check -->
+
+    
+    <div class="container my-4">
+        <h2 class="text-center mb-4">Learning Schedule</h2>
+        <!-- Filters and Print Button -->
+        <form action="{{ route('learning-schedule.index') }}" method="GET" class="mb-4">
+            <div class="row align-items-end">
+                @if(Auth::user()->role === 'instructor' || Auth::user()->role === 'Admin')
+                <div class="col-md-2">
+                    <label for="course_filter" class="form-label fw-bold">Filter by Course</label>
+                    <select class="form-select form-select-sm" id="course_filter" name="course_filter" onchange="this.form.submit()">
+                        <option value="">All Courses</option>
+                        @foreach($courses as $course)
+                            <option value="{{ $course->id }}" {{ request('course_filter') == $course->id ? 'selected' : '' }}>{{ $course->title }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <label for="instructor_filter" class="form-label fw-bold">Filter by Instructor</label>
+                    <select class="form-select form-select-sm" id="instructor_filter" name="instructor_filter" onchange="this.form.submit()">
+                        <option value="">All Instructors</option>
+                        @foreach($instructors as $instructor)
+                            <option value="{{ $instructor->id }}" {{ request('instructor_filter') == $instructor->id ? 'selected' : '' }}>{{ $instructor->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                @endif
+                <div class="col-md-14 text-end">
+                    <button onclick="window.print()" class="btn btn-secondary btn-sm">Print Schedule</button>
+                </div>
+            </div>
+        </form>
+        @if(Auth::user()->role === 'instructor' || Auth::user()->role === 'student' || Auth::user()->role === 'Admin')
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped table-hover shadow-sm" id="scheduleTable">
+                <thead class="table-primary text-center">
+                    <tr>
+                        <th>Date</th>
+                        <th>Course</th>
+                        <th>Material</th>
+                        <th>Start Time</th>
+                        <th>End Time</th>
+                        <th>Instructor Name</th>
+                        @if(Auth::user()->role === 'Admin')
+                        <th>Actions</th>
+                        @endif
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($schedules as $schedule)
+                    <tr>
+                        <td>{{ \Carbon\Carbon::parse($schedule->date)->translatedFormat("l, d F Y") }}</td>
+                        <td>{{ $schedule->course->title }}</td>
+                        <td>{{ $schedule->material }}</td>
+                        <td>{{ $schedule->start_time }}</td>
+                        <td>{{ $schedule->end_time }}</td>
+                        <td>{{ $schedule->instructor->name }}</td>
+                        @if(Auth::user()->role === 'Admin')
+                        <td>
+                            <a href="{{ route('learning-schedule.edit', $schedule->id) }}" class="btn btn-sm btn-primary">Edit</a>
+                            <form action="{{ route('learning-schedule.destroy', $schedule->id) }}" method="POST" class="d-inline">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this schedule?')">Delete</button>
+                            </form>
+                        </td>
+                        @endif
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
         </div>
     </div>
+    
+    
+    @endif <!-- Close Role Check -->
+    @endauth <!-- Close Auth Check -->
 </div>
 
-
-<script src="https://cdn.jsdelivr.net/npm/@fullcalendar/core@6.0.0/main.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid@6.0.0/main.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    var calendarEl = document.getElementById('calendar');
-
-    var calendar = new FullCalendar.Calendar(calendarEl, {
-        initialView: 'dayGridMonth',
-        events: function(info, successCallback, failureCallback) {
-            fetch("{{ route('learning-schedule.events') }}")
-                .then(response => response.json())
-                .then(data => successCallback(data))
-                .catch(error => {
-                    console.error('Error fetching events:', error);
-                    failureCallback(error);
-                });
-        },
-        eventClick: function(info) {
-            var event = info.event;
-            document.getElementById('updateTitle').value = event.title;
-            document.getElementById('updateDescription').value = event.extendedProps.description;
-            document.getElementById('updateStart').value = event.start.toISOString().slice(0, 16);
-            document.getElementById('updateEnd').value = event.end ? event.end.toISOString().slice(0, 16) : '';
-            document.getElementById('updateId').value = event.id;
-
-           
-            var updateForm = document.getElementById('updateForm');
-            updateForm.action = "{{ url('learning-schedule/update') }}/" + event.id;
-
-            var updateModal = new bootstrap.Modal(document.getElementById('updateModal'));
-            updateModal.show();
+<style>
+    @media print {
+        body * {
+            visibility: hidden;
         }
-    });
-
-    calendar.render();
-});
-</script>
-
-@endsection
-
+        #scheduleTable, #scheduleTable * {
+            visibility: visible;
+        }
+        #scheduleTable {
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+        #scheduleTable th:last-child, #scheduleTable td:last-child {
+            display: none;
+        }
+    }
+</style>
+@endsection  

@@ -18,7 +18,7 @@ return new class extends Migration
             $table->enum('status', ['Hadir', 'Tidak Hadir']); // Dropdown hadir atau tidak
             $table->text('reason')->nullable(); // Alasan jika tidak hadir
             $table->timestamps();
-    
+
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }

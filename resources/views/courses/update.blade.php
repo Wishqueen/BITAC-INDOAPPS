@@ -38,10 +38,10 @@
                         <input type="text" class="form-control" id="duration" name="duration" value="{{ old('duration', $course->duration) }}" placeholder="Masukkan durasi kursus" required>
                     </div>
 
-                    <div class="mb-3">
+                    {{-- <div class="mb-3">
                         <label for="instructor" class="form-label">Instructor Name</label>
                         <input type="text" class="form-control" id="instructor" name="instructor" value="{{ old('instructor', $course->instructor) }}" placeholder="Masukkan nama instruktur" required>
-                    </div>
+                    </div> --}}
 
                     <div class="mb-3">
                         <label for="students" class="form-label">Number of Students</label>

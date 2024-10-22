@@ -5,17 +5,17 @@
         <!-- Profile Picture (Optional) -->
         <div class="text-center mb-4">
             @auth
-                @if(Auth::user()->image)
+                @if (Auth::user()->image)
                     <!-- If profile picture exists -->
                     <a href="{{ url('/profile') }}">
-                        <img src="{{ asset('img/' . Auth::user()->image) }}" 
-                             alt="Profile Picture" class="rounded-circle" width="60" height="60">
+                        <img src="{{ asset('img/' . Auth::user()->image) }}" alt="Profile Picture" class="rounded-circle"
+                            width="60" height="60">
                     </a>
                 @else
                     <!-- If no profile picture, display the first letter of the name or email -->
                     <a href="{{ url('/profile') }}">
                         <div class="rounded-circle bg-primary text-white d-flex justify-content-center align-items-center mx-auto"
-                             style="width: 60px; height: 60px; font-size: 24px;">
+                            style="width: 60px; height: 60px; font-size: 24px;">
                             {{ strtoupper(substr(Auth::user()->name ?? Auth::user()->email, 0, 1)) }}
                         </div>
                     </a>
@@ -30,18 +30,26 @@
         <!-- Menu Items -->
         <ul class="navbar-nav flex-grow-1">
             @auth
-                @if(Auth::user()->role === 'student' || Auth::user()->role === 'Admin')
+                @if (Auth::user()->role === 'student')
                     <li class="nav-item mb-2">
-                        <a class="nav-link text-black d-flex align-items-center" href="{{ url('/courses/{id}/materials') }}">
+                        <a class="nav-link text-black d-flex align-items-center" href="{{ url('/my-courses') }}">
                             <i class="fa fa-book me-2" style="font-size: 16px;"></i> Learning Materials
                         </a>
                     </li>
                 @endif
 
-                @if(Auth::user()->role === 'student' || Auth::user()->role === 'Admin')
+                @if (Auth::user()->role === 'instructor')
                     <li class="nav-item mb-2">
-                        <a class="nav-link text-black d-flex align-items-center" href="{{ url('/penilaian') }}">
-                            <i class="fa fa-check-square me-2" style="font-size: 16px;"></i> Assignment
+                        <a class="nav-link text-black d-flex align-items-center" href="{{ url('/learning-materials') }}">
+                            <i class="fa fa-book me-2" style="font-size: 16px;"></i> Learning Materials
+                        </a>
+                    </li>
+                @endif
+
+                @if (Auth::user()->role === 'student')
+                    <li class="nav-item mb-2">
+                        <a class="nav-link text-black d-flex align-items-center" href="{{ url('/user/assignments') }}">
+                            <i class="fa fa-check-square me-2" style="font-size: 16px;"></i> Assignments
                         </a>
                     </li>
                     <li class="nav-item mb-2">
@@ -51,7 +59,22 @@
                     </li>
                 @endif
 
-                @if(Auth::user()->role === 'instructor' || Auth::user()->role === 'Admin')
+                @if (Auth::user()->role === 'instructor' || Auth::user()->role === 'Admin')
+                    <li class="nav-item mb-2">
+                        <a class="nav-link text-black d-flex align-items-center" href="{{ url('/admin/assignments') }}">
+                            <i class="fa fa-check-square me-2" style="font-size: 16px;"></i> Assignments
+                        </a>
+                    </li>
+                    <li class="nav-item mb-2">
+                        <a class="nav-link text-black d-flex align-items-center" href="{{ url('/certifications') }}">
+                            <i class="fa fa-certificate me-2" style="font-size: 16px;"></i> Certification
+                        </a>
+                    </li>
+                @endif
+
+
+
+                @if (Auth::user()->role === 'instructor' || Auth::user()->role === 'Admin' || Auth::user()->role === 'student')
                     <li class="nav-item mb-2">
                         <a class="nav-link text-black d-flex align-items-center" href="{{ url('/students') }}">
                             <i class="fa fa-users me-2" style="font-size: 16px;"></i> Student Data
@@ -67,10 +90,21 @@
                             <i class="fa fa-calendar-alt me-2" style="font-size: 16px;"></i> Learning Schedule
                         </a>
                     </li>
+                @endif
+                @if (Auth::user()->role === 'instructor' || Auth::user()->role === 'Admin')
                     <li class="nav-item mb-2">
-                        <a class="nav-link text-black d-flex align-items-center" href="{{ url('/evaluation') }}">
+                        <a class="nav-link text-black d-flex align-items-center" href="{{ url('/feedback') }}">
                             <i class="fa fa-chart-bar me-2" style="font-size: 16px;"></i> Evaluation
                         </a>
+                    </li>
+                @endif
+                @if (Auth::user()->role === 'student')
+                    <li class="nav-item mb-2">
+                        <a class="nav-link text-black d-flex align-items-center"
+                            href="{{ url('feedback/user/' . Auth::user()->id) }}">
+                            <i class="fa fa-chart-bar me-2" style="font-size: 16px;"></i> Evaluation
+                        </a>
+
                     </li>
                 @endif
             @endauth

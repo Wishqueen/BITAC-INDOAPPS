@@ -21,19 +21,19 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
-         'gender', 
-         'address', 
-         'email', 
-         'phone', 
-         'date_of_birth', 
-         'image',
-         'email_verified_at',
-         'password',
-         'course_id',
-         'role',
+        'gender',
+        'address',
+        'email',
+        'phone',
+        'date_of_birth',
+        'image',
+        'email_verified_at',
+        'password',
+        'course_id',
+        'role',
 
     ];
-    
+
 
     /**
      * The attributes that should be hidden for serialization.
@@ -58,20 +58,32 @@ class User extends Authenticatable
         return $this->belongsTo(Course::class);
     }
     public function attendances()
-{
-    return $this->hasMany(Attendance::class);
-}
-public function certifications()
-{
-    return $this->hasMany(Certification::class);
-}
-public function students()
-{
-    return $this->hasMany(Student::class);
-}
-public function courses()
-{
-    // This assumes each student can have multiple courses through the students table
-    return $this->hasManyThrough(Course::class, Student::class, 'user_id', 'id', 'id', 'course_id');
-}
+    {
+        return $this->hasMany(Attendance::class);
+    }
+    public function certifications()
+    {
+        return $this->hasMany(Certification::class);
+    }
+    public function students()
+    {
+        return $this->hasMany(Student::class);
+    }
+    public function courses()
+    {
+        // This assumes each student can have multiple courses through the students table
+        return $this->hasManyThrough(Course::class, Student::class, 'user_id', 'id', 'id', 'course_id');
+    }
+
+    public function transactions()
+    {
+        return $this->hasMany(Transaction::class);
+    }
+
+
+    // Relasi ke TransactionItem
+    public function transactionItems()
+    {
+        return $this->hasManyThrough(TransactionItem::class, Transaction::class);
+    }
 }

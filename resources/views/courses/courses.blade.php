@@ -5,9 +5,9 @@
         <div class="container">
             <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
                 <h6 class="section-title bg-white text-center text-primary px-3">Program</h6>
-                <h1 class="mb-5">Program</h1>
+                <h1 class="mb-5">Courses</h1>
                 @auth
-                @if(Auth::user()->role === 'Admin');
+                @if(Auth::user()->role === 'instructor');
                 <a href="{{ route('course.create') }}" class="btn btn-primary mb-4">
                     <i class="fas fa-plus"></i> Add Data
                 </a> <!-- Tambah Data button -->
@@ -32,8 +32,8 @@
                                         Read More
                                     </a>
                                 </div>
-                                @auth
-                                @if(Auth::user()->role === 'Admin');
+                                {{-- @auth
+                                @if(Auth::user()->role === 'instructor');
                                 <div class="position-absolute top-0 end-0 mt-3 me-3">
                                     <a href="{{ route('course.edit', $course->id) }}" class="btn btn-sm btn-warning me-2"><i class="fa fa-edit"></i></a> <!-- Edit icon -->
                                     <form action="{{ route('course.destroy', $course->id) }}" method="POST" style="display: inline;" onsubmit="return confirm('Are you sure you want to delete this course?');">
@@ -43,7 +43,7 @@
                                     </form>
                                 </div>
                                 @endif
-                                @endauth
+                                @endauth --}}
                             </div>
                             <div class="text-center p-4 pb-0">
                                 <h3 class="mb-0">${{ number_format($course->price, 2) }}</h3>

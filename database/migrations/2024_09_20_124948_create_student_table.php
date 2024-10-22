@@ -13,7 +13,9 @@ return new class extends Migration
     {
         Schema::create('students', function (Blueprint $table) {
             $table->id();
+            // Relasi dengan tabel users
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            // Relasi dengan tabel courses
             $table->foreignId('course_id')->constrained()->onDelete('cascade');
             $table->timestamps();
         });
@@ -24,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('student');
+        Schema::dropIfExists('students'); // Perbaikan nama tabel yang di-drop
     }
 };

@@ -10,9 +10,21 @@ class LearningSchedule extends Model
     use HasFactory;
 
     protected $fillable = [
-        'title',
-        'start',
-        'end',
-        'description'
+        'date',
+        'course_id',
+        'material',
+        'start_time',
+         'end_time',
+        'instructor_id'
     ];
+
+    public function course()
+    {
+        return $this->belongsTo(Course::class);
+    }
+
+    public function instructor()
+    {
+        return $this->belongsTo( User::class);
+    }
 }

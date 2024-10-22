@@ -22,3 +22,14 @@
         </div>
     </div>
 </div>
+
+<!-- CSS untuk footer -->
+<style>
+    /* Footer styles */
+    .footer {
+        background-color: #343a40;
+        color: #ffffff;
+        padding: 30px 0;
+        margin-top: 800px; /* Ensures footer is pushed to the bottom */
+    }
+</style>

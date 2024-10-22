@@ -13,11 +13,19 @@ return new class extends Migration
     {
         Schema::create('certifications', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade'); // Foreign key to users table
-            $table->foreignId('course_id')->constrained()->onDelete('cascade'); // Foreign key to courses table
-            $table->string('title');
-            $table->text('description');
-            $table->string('image'); // URL or path to the image
+            $table->foreignId('user_id')
+                ->nullable()
+                ->constrained('users')
+                ->onDelete('cascade'); // Foreign key to users table, with cascading delete
+
+            $table->foreignId('course_id')
+                ->constrained('courses')
+                ->onDelete('cascade'); // Foreign key to courses table, with cascading delete
+            $table->string('certificate_number');
+            $table->string('title')->nullable();; // Title of the certification
+            $table->text('description'); // Description of the certification
+            $table->string('image')->nullable(); // URL or path to the image, make nullable if it's optional
+            $table->date('date')->nullable(); // Date field for certification date
             $table->timestamps();
         });
     }
