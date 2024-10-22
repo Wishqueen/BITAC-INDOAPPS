@@ -53,7 +53,7 @@
                     </a>
                 </li>
                 @endif
-                
+
                 @if (Auth::user()->role === 'student')
                     <li class="nav-item mb-2">
                         <a class="nav-link text-black d-flex align-items-center" href="{{ url('/user/assignments') }}">
@@ -67,13 +67,14 @@
                     </li>
                 @endif
 
-                @if (Auth::user()->role === 'instructor'|| Auth::user()->role === 'Admin')
+                @if (Auth::user()->role === 'instructor')
                     <li class="nav-item mb-2">
                         <a class="nav-link text-black d-flex align-items-center" href="{{ url('/admin/assignments') }}">
                             <i class="fa fa-check-square me-2" style="font-size: 16px;"></i> Assignments
                         </a>
                     </li>
-
+                    @endif
+                @if (Auth::user()->role === 'instructor'|| Auth::user()->role === 'Admin')
                     <li class="nav-item mb-2">
                         <a class="nav-link text-black d-flex align-items-center" href="{{ url('/students') }}">
                             <i class="fa fa-users me-2" style="font-size: 16px;"></i> Student Data
