@@ -38,7 +38,7 @@
                     </li>
                 @endif
 
-                @if (Auth::user()->role === 'instructor')
+                @if (Auth::user()->role === 'instructor'|| Auth::user()->role === 'Admin')
                     <li class="nav-item mb-2">
                         <a class="nav-link text-black d-flex align-items-center" href="{{ url('/learning-materials') }}">
                             <i class="fa fa-book me-2" style="font-size: 16px;"></i> Learning Materials
@@ -46,6 +46,14 @@
                     </li>
                 @endif
 
+                @if (Auth::user()->role === 'student'|| Auth::user()->role === 'Admin')
+                <li class="nav-item mb-2">
+                    <a class="nav-link text-black d-flex align-items-center" href="{{ url('/certifications') }}">
+                        <i class="fa fa-certificate me-2" style="font-size: 16px;"></i> Certification
+                    </a>
+                </li>
+                @endif
+                
                 @if (Auth::user()->role === 'student')
                     <li class="nav-item mb-2">
                         <a class="nav-link text-black d-flex align-items-center" href="{{ url('/user/assignments') }}">
@@ -59,15 +67,16 @@
                     </li>
                 @endif
 
-                @if (Auth::user()->role === 'instructor' || Auth::user()->role === 'Admin')
+                @if (Auth::user()->role === 'instructor'|| Auth::user()->role === 'Admin')
                     <li class="nav-item mb-2">
                         <a class="nav-link text-black d-flex align-items-center" href="{{ url('/admin/assignments') }}">
                             <i class="fa fa-check-square me-2" style="font-size: 16px;"></i> Assignments
                         </a>
                     </li>
+
                     <li class="nav-item mb-2">
-                        <a class="nav-link text-black d-flex align-items-center" href="{{ url('/certifications') }}">
-                            <i class="fa fa-certificate me-2" style="font-size: 16px;"></i> Certification
+                        <a class="nav-link text-black d-flex align-items-center" href="{{ url('/students') }}">
+                            <i class="fa fa-users me-2" style="font-size: 16px;"></i> Student Data
                         </a>
                     </li>
                 @endif
@@ -75,11 +84,6 @@
 
 
                 @if (Auth::user()->role === 'instructor' || Auth::user()->role === 'Admin' || Auth::user()->role === 'student')
-                    <li class="nav-item mb-2">
-                        <a class="nav-link text-black d-flex align-items-center" href="{{ url('/students') }}">
-                            <i class="fa fa-users me-2" style="font-size: 16px;"></i> Student Data
-                        </a>
-                    </li>
                     <li class="nav-item mb-2">
                         <a class="nav-link text-black d-flex align-items-center" href="{{ url('/attendance') }}">
                             <i class="fa fa-calendar-check me-2" style="font-size: 16px;"></i> Attendance
@@ -91,7 +95,7 @@
                         </a>
                     </li>
                 @endif
-                @if (Auth::user()->role === 'instructor' || Auth::user()->role === 'Admin')
+                @if (Auth::user()->role === 'instructor')
                     <li class="nav-item mb-2">
                         <a class="nav-link text-black d-flex align-items-center" href="{{ url('/feedback') }}">
                             <i class="fa fa-chart-bar me-2" style="font-size: 16px;"></i> Evaluation

@@ -30,7 +30,7 @@
                 </a>
             @endif
             @if (Auth::user()->role === 'instructor')
-                <a href="{{ url('/mycourses') }}" class="nav-item nav-link">My Courses</a>
+                <a href="{{ url('/mycourses') }}" class="nav-item nav-link {{ Request::is('mycourses') ? 'active' : '' }}"">My Courses</a>
             @endif
 
 
