@@ -56,12 +56,28 @@
 
                     <!-- Courses List -->
                     <div class="mb-3">
-                        <h5><i class="fa fa-book me-2"></i> Courses</h5>
+                        <h5><i class="fa fa-book me-2"></i> Program</h5>
                         <ul>
-                            @if($student->course)
-                                <li>{{ $student->course->title }}</li>
+                            @php
+                                // Collect all course titles from completed transactions
+                                $courseTitles = [];
+                                foreach ($student->transactions as $transaction) {
+                                    if ($transaction->status === 'settlement') { // Adjust this condition if necessary
+                                        foreach ($transaction->transactionItems as $item) {
+                                            $courseTitles[] = $item->course->title; // Add course title to the array
+                                        }
+                                    }
+                                }
+                                // Remove duplicates
+                                $uniqueCourseTitles = array_unique($courseTitles);
+                            @endphp
+
+                            @if(!empty($uniqueCourseTitles))
+                                @foreach($uniqueCourseTitles as $courseTitle)
+                                    <li>{{ $courseTitle }}</li>
+                                @endforeach
                             @else
-                                <li>No course assigned</li>
+                                <li>No programs assigned</li>
                             @endif
                         </ul>
                     </div>

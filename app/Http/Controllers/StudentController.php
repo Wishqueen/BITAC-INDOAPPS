@@ -34,15 +34,25 @@ class StudentController extends Controller
         return view('students.index', compact('students', 'courses', 'selectedCourse'));
     }
 
-    public function index2()
+    public function index2(Request $request)
     {
-        // Fetch users with the 'student' role and their courses via the students table
-        $students = User::where('role', 'student')->whereNotNull('course_id')->get();
+        // Get all students
+        $students = User::where('role', 'student')->with('transactions.transactionItems.course')->get();
+    
+        // Filter students who have completed transactions
+        $studentsWithTransactions = $students->filter(function ($student) {
+            return $student->transactions->contains(function ($transaction) {
+                return $transaction->status === 'settlement';
+            });
+        });
 
-        $students = $students->shuffle();
+        $shuffledStudents = $studentsWithTransactions->shuffle();
 
-        return view('students.index2', compact('students'));
+        return view('students.index2', [
+            'students' => $shuffledStudents,
+        ]);
     }
+    
 
     public function show($id)
     {

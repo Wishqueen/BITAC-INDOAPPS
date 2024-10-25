@@ -3,7 +3,7 @@
 @section('konten')
     <br><br>
     <div class="container">
-        <h1 class="mb-4 text-center">Students Data</h1>
+        <h1 class="mb-4 text-center">Data Siswa</h1>
 
         <div class="d-flex justify-content-between mb-3">
             <div class="form-group">
@@ -13,7 +13,8 @@
                         <option value="">All Program</option>
                         @foreach ($courses as $course)
                             <option value="{{ $course->title }}" {{ $selectedCourse == $course->title ? 'selected' : '' }}>
-                                {{ $course->title }}</option>
+                                {{ $course->title }}
+                            </option>
                         @endforeach
                     </select>
                 </form>
@@ -37,7 +38,7 @@
                     </thead>
                     <tbody>
                         @foreach ($students as $index => $student)
-                            <tr data-course="{{ $student->course ? $student->course->title : 'N/A' }}">
+                            <tr>
                                 <td class="text-center">{{ $index + 1 }}</td>
                                 <td>
                                     <div class="d-flex align-items-center">
@@ -48,23 +49,44 @@
                                 <td>{{ ucfirst($student->gender) ?? '-' }}</td>
                                 <td>{{ $student->address ?? '-' }}</td>
                                 <td>{{ $student->phone ?? '-' }}</td>
-                                <td>{{ $selectedCourse }}</td>
+                                <td>
+                                    @php
+                                        // Array to store unique course titles for the current student
+                                        $courseTitles = []; 
+                                        // Loop through the transactions of the student
+                                        foreach ($student->transactions as $transaction) {
+                                            // Check if the transaction is completed
+                                            if ($transaction->status === 'settlement') {
+                                                foreach ($transaction->transactionItems as $item) {
+                                                    // If 'All Program' is selected, add all checked out courses
+                                                    if ($selectedCourse === '' || $item->course->title === $selectedCourse) {
+                                                        $courseTitles[] = $item->course->title; // Add course title to the array
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        // Remove duplicate course titles
+                                        $uniqueCourseTitles = array_unique($courseTitles);
+                                        // Display the results
+                                        $courseDisplay = !empty($uniqueCourseTitles) ? implode(', ', $uniqueCourseTitles) : 'N/A';
+                                    @endphp
+                                    {{ $courseDisplay }} <!-- Display unique course titles -->
+                                </td>
                             </tr>
                         @endforeach
                     </tbody>
+                    
                 </table>
             </div>
         @else
-            <div class="alert alert-info text-center">No students found.</div>
+            <div class="alert alert-info text-center">Tidak ada siswa yang ditemukan.</div>
         @endif
     </div>
 @endsection
 
-
 <!-- Custom CSS to handle print behavior -->
 <style>
     @media print {
-
         /* Hide everything except the table */
         body * {
             visibility: hidden;
