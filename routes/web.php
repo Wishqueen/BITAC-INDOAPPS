@@ -122,10 +122,6 @@ Route::middleware('auth')->group(function() {
 });
 
 
-Route::middleware(['role:admin'])->group(function () {});
-
-Route::middleware(['role:instructor'])->group(function () {});
-
 Route::get('/learning-materials/create', [LearningMaterialController::class, 'create'])->name('learning-materials.create');
 Route::post('/learning-materials', [LearningMaterialController::class, 'store'])->name('learning-materials.store');
 Route::get('/learning-materials', [LearningMaterialController::class, 'index'])->name('learning-materials.index');

@@ -31,9 +31,9 @@
             </div>
     
             <div class="mb-3">
-                <label for="course_id" class="form-label">Course</label>
+                <label for="course_id" class="form-label">Program</label>
                 <select class="form-select" id="course_id" name="course_id" required>
-                    <option value="" disabled selected>Select a course</option>
+                    <option value="" disabled selected>Select a program</option>
                     @foreach($courses as $course)
                         <option value="{{ $course->id }}">{{ $course->title }}</option>
                     @endforeach
@@ -79,9 +79,9 @@
             <div class="row align-items-end">
                 @if(Auth::user()->role === 'instructor' || Auth::user()->role === 'Admin')
                 <div class="col-md-2">
-                    <label for="course_filter" class="form-label fw-bold">Filter by Course</label>
+                    <label for="course_filter" class="form-label fw-bold">Filter by Program</label>
                     <select class="form-select form-select-sm" id="course_filter" name="course_filter" onchange="this.form.submit()">
-                        <option value="">All Courses</option>
+                        <option value="">All Program</option>
                         @foreach($courses as $course)
                             <option value="{{ $course->id }}" {{ request('course_filter') == $course->id ? 'selected' : '' }}>{{ $course->title }}</option>
                         @endforeach
@@ -108,7 +108,7 @@
                 <thead class="table-primary text-center">
                     <tr>
                         <th>Date</th>
-                        <th>Course</th>
+                        <th>Program</th>
                         <th>Material</th>
                         <th>Start Time</th>
                         <th>End Time</th>

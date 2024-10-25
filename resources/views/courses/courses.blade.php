@@ -5,7 +5,7 @@
         <div class="container">
             <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
                 <h6 class="section-title bg-white text-center text-primary px-3">Program</h6>
-                <h1 class="mb-5">Courses</h1>
+                <h1 class="mb-5">Program</h1>
                 @auth
                 @if(Auth::user()->role === 'instructor'|| Auth::user()->role === 'Admin');
                 <a href="{{ route('course.create') }}" class="btn btn-primary mb-4">

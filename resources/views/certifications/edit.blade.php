@@ -20,9 +20,9 @@
                 
                 <!-- Course Selection Field -->
                 <div class="mb-3">
-                    <label for="course_id" class="form-label">Course</label>
+                    <label for="course_id" class="form-label">Program</label>
                     <select class="form-select" id="course_id" name="course_id" required>
-                        <option disabled>Select Course</option>
+                        <option disabled>Select Program</option>
                         @foreach($courses as $course)
                             <option value="{{ $course->id }}" {{ $course->id == $certification->course_id ? 'selected' : '' }}>
                                 {{ $course->title }}
@@ -33,9 +33,9 @@
 
                 <!-- User Selection Field -->
                 <div class="mb-3">
-                    <label for="user_id" class="form-label">User</label>
+                    <label for="user_id" class="form-label">Student</label>
                     <select class="form-select" id="user_id" name="user_id" required>
-                        <option disabled>Select User</option>
+                        <option disabled>Select Student</option>
                         @foreach($users as $user)
                             <option value="{{ $user->id }}" {{ $user->id == $certification->user_id ? 'selected' : '' }}>
                                 {{ $user->name }}

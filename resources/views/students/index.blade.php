@@ -10,7 +10,7 @@
                 <label for="courseFilter">Filter by Program:</label>
                 <form action="{{ route('students.index') }}" method="GET">
                     <select id="courseFilter" name="course" class="form-select" onchange="this.form.submit()">
-                        <option value="">All Courses</option>
+                        <option value="">All Program</option>
                         @foreach ($courses as $course)
                             <option value="{{ $course->title }}" {{ $selectedCourse == $course->title ? 'selected' : '' }}>
                                 {{ $course->title }}</option>

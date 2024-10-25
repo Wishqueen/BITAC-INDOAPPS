@@ -23,9 +23,9 @@
         </div>
 
         <div class="mb-3">
-            <label for="course_id" class="form-label">Course</label>
+            <label for="course_id" class="form-label">Program</label>
             <select class="form-select" id="course_id" name="course_id" required>
-                <option value="" disabled>Select a course</option>
+                <option value="" disabled>Select a program</option>
                 @foreach($courses as $course)
                     <option value="{{ $course->id }}" {{ $schedule->course_id == $course->id ? 'selected' : '' }}>{{ $course->title }}</option>
                 @endforeach

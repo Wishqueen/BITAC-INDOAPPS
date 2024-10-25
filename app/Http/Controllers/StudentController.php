@@ -37,7 +37,8 @@ class StudentController extends Controller
     public function index2()
     {
         // Fetch users with the 'student' role and their courses via the students table
-        $students = User::where('role', 'student')->with('courses')->get();
+        $students = User::where('role', 'student')->whereNotNull('course_id')->get();
+
         $students = $students->shuffle();
 
         return view('students.index2', compact('students'));

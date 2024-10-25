@@ -27,7 +27,7 @@
 
         <!-- Achievement Section -->
         <p class="mt-4 text-muted text-center" style="font-size: 1.2rem; color: #666;">
-            In recognition of successfully completing the course:
+            In recognition of successfully completing the program:
         </p>
         <h3 class="fw-bold mb-4 text-center text-secondary" style="font-size: 2rem; color: #444;">
             {{ $certification->course->title ?? 'No Course' }}

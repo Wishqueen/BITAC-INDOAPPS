@@ -32,9 +32,9 @@
     
                         <!-- Course Selection Field -->
                         <div class="mb-3">
-                            <label for="course_id" class="form-label">Course</label>
+                            <label for="course_id" class="form-label">Program</label>
                             <select class="form-select" id="course_id" name="course_id" required>
-                                <option selected disabled>Select Course</option>
+                                <option selected disabled>Select Program</option>
                                 @foreach($courses as $course)
                                     <option value="{{ $course->id }}">{{ $course->title }}</option>
                                 @endforeach
@@ -43,9 +43,9 @@
     
                         <!-- User Selection Field -->
                         <div class="mb-3">
-                            <label for="user_id" class="form-label">User</label>
+                            <label for="user_id" class="form-label">Student</label>
                             <select class="form-select" id="user_id" name="user_id" required>
-                                <option selected disabled>Select User</option>
+                                <option selected disabled>Student</option>
                                 <!-- Users will be populated here based on the selected course -->
                             </select>
                         </div>
@@ -97,7 +97,7 @@
                 <div class="card border-0 shadow-sm rounded-4 h-100 hover-shadow">
                     <div class="card-body d-flex flex-column">
                         <p class="card-text card-title text-primary fw-semibold"><strong>{{ $certification->user->name ?? 'Unknown User' }}</strong></p>
-                        <p class="card-text"><strong>Course:</strong> {{ $certification->course->title ?? 'No Course' }}</p>
+                        <p class="card-text"><strong>Program:</strong> {{ $certification->course->title ?? 'No Course' }}</p>
                         <p class="card-text"><strong>Certificate Number:</strong> {{ $certification->certificate_number ?? 'Not Available' }}</p> <!-- Display Certificate Number -->
                         <p class="card-text"><strong>Date:</strong> {{ $certification->date ?? 'No Date' }}</p>
 

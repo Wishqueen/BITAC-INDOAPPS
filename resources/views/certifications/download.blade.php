@@ -60,7 +60,7 @@
             <h1 class="recipient-name">
                 {{ $certification->user->name ?? 'Unknown Recipient' }}
             </h1>
-            <p>In recognition of successfully completing the course:</p>
+            <p>In recognition of successfully completing the program:</p>
             <h3 class="course-title">
                 {{ $certification->course->title ?? 'No Course' }}
             </h3>

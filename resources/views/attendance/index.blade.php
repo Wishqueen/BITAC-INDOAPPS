@@ -53,7 +53,7 @@
                     </select>
                 </div>
                 <div class="col-md-3">
-                    <label for="course">Filter by Course:</label>
+                    <label for="course">Filter by Program:</label>
                     <select name="course" class="form-select">
                         <option value="">All</option>
                         @foreach($courses as $course)
@@ -71,7 +71,7 @@
             <thead>
                 <tr>
                     <th>User</th>
-                    <th>Course</th>
+                    <th>Program</th>
                     <th>Date</th>
                     <th>Status</th>
                     <th>Reason</th>

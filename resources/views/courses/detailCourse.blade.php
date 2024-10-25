@@ -31,7 +31,7 @@
                         <h4>Total: Rp{{ number_format($course->price, 2) }}</h4>
 
                         <!-- Kondisi jika role user adalah student -->
-                        @if(Auth::user()->role === 'student')
+                        @if(Auth::check() && Auth::user()->role === 'student')
                             <div class="main-border-button">
                                 @php
                                     $cart = session('cart');
@@ -65,6 +65,13 @@
                                         </button>
                                     </form>
                                 @endif
+                            </div>
+                        @else
+                            <!-- Jika belum login -->
+                            <div class="main-border-button">
+                                <a href="{{ route('login') }}" class="btn btn-primary w-100">
+                                    Login to Add to Cart
+                                </a>
                             </div>
                         @endif
                     </div>
