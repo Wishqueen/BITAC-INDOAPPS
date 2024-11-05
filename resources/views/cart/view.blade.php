@@ -10,19 +10,27 @@
                 <thead class="thead-dark">
                     <tr>
                         <th>Course</th>
-                        <th>Price</th>
+                        <th>Original Price</th>
+                        <th>Discount</th>
+                        <th>Discounted Price</th>
                         <th>Quantity</th>
                         <th>Subtotal</th>
                         <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @php $total = 0; @endphp
-                    @foreach(session('cart') as $id => $details)
-                        @php $subtotal = $details['price'] * $details['quantity']; @endphp
+                    @foreach($cart as $id => $details)
+                        @php
+                            $originalPrice = $details['price'];
+                            $discountRate = $details['discountRate'] ?? 0; // Display as percentage
+                            $discountedPrice = $details['discountedPrice'];
+                            $subtotal = $discountedPrice * $details['quantity'];
+                        @endphp
                         <tr>
                             <td class="align-middle">{{ $details['title'] }}</td>
-                            <td class="align-middle">Rp{{ number_format($details['price'], 2) }}</td>
+                            <td class="align-middle">Rp{{ number_format($originalPrice, 2) }}</td>
+                            <td class="align-middle">{{ $discountRate }}%</td>
+                            <td class="align-middle">Rp{{ number_format($discountedPrice, 2) }}</td>
                             <td class="align-middle">{{ $details['quantity'] }}</td>
                             <td class="align-middle">Rp{{ number_format($subtotal, 2) }}</td>
                             <td class="align-middle">
@@ -33,12 +41,11 @@
                                 </form>
                             </td>
                         </tr>
-                        @php $total += $subtotal; @endphp
                     @endforeach
                 </tbody>
                 <tfoot>
                     <tr>
-                        <td colspan="3" class="text-right font-weight-bold">Total</td>
+                        <td colspan="5" class="text-right font-weight-bold">Total</td>
                         <td colspan="2" class="font-weight-bold">Rp{{ number_format($total, 2) }}</td>
                     </tr>
                 </tfoot>
@@ -47,7 +54,9 @@
 
         <div class="d-flex justify-content-between mt-4">
             <a href="{{ url('/courses') }}" class="btn btn-outline-secondary" style="border-radius: 20px; padding: 10px 30px;">Back to Courses</a>
-            <a href="{{ route('checkout') }}" class="btn btn-primary" style="background-color: #17a2b8; border: none; border-radius: 20px; padding: 10px 30px;">Proceed to Checkout</a>
+            <a href="{{ route('checkout') }}" class="btn btn-primary" style="background-color: #17a2b8; border: none; border-radius: 20px; padding: 10px 30px;">
+                Proceed to Checkout
+            </a>
         </div>
     @else
         <div class="alert alert-info text-center">Your cart is empty!</div>

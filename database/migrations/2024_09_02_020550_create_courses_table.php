@@ -14,7 +14,9 @@ return new class extends Migration
         Schema::create('courses', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->decimal('price', 8, 2);
+            $table->decimal('price', 10, 2); // Decimal with larger precision
+            $table->decimal('discount', 5, 2)->nullable(); // Discount percentage
+            $table->decimal('discounted_price', 10, 2)->nullable(); // Final price after discount // Discount column, nullable
             $table->string('duration');
             $table->string('instructor');
             $table->integer('students');

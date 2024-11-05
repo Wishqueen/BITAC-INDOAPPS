@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\certification;
 use App\Models\course;
 use App\Models\User;
-use Barryvdh\DomPDF\Facade\Pdf;
+use App\Services\PDFservice;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -146,8 +146,15 @@ class CertificationController extends Controller
         return redirect()->route('certifications.index')->with('success', 'Certification deleted successfully.');
     }
 
+    protected $pdfService;
+
+    public function __construct(PDFservice $pdfService)
+    {
+        $this->pdfService = $pdfService;
+    }
     public function download($id)
     {
+        // Ambil data sertifikasi dengan relasi user dan course
         $certification = Certification::with('user', 'course')->findOrFail($id);
 
         // Format tanggal jika ada
@@ -155,11 +162,12 @@ class CertificationController extends Controller
             ? Carbon::parse($certification->date)->format('F j, Y')
             : 'Date not provided';
 
-        // Buat PDF dengan variabel tambahan $formattedDate
-        $pdf = Pdf::loadView('certifications.download', compact('certification', 'formattedDate'))
-            ->setPaper('f4', 'landscape')->setOption('margin-bottom', 0);;
+        // Data yang akan diteruskan ke view
+        $data = compact('certification', 'formattedDate');
+        $fileName = 'certificate_' . str_replace(' ', '_', $certification->user->name) . '.pdf';
 
-        return $pdf->download('certificate_' . $certification->user->name . '.pdf');
+        // Gunakan PDFService untuk mengunduh PDF
+        return $this->pdfService->generatePDF('certifications.download', $data, $fileName);
     }
 
     public function getUsersByCourse(Request $request)

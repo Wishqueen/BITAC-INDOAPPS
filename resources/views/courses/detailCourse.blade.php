@@ -14,7 +14,40 @@
             <div class="col-lg-4">
                 <div class="right-content">
                     <h4 class="mb-3">{{ $course->title }}</h4>
-                    <span class="price h5 text-primary mb-3">Rp{{ number_format($course->price, 2) }}</span>
+
+                    @php
+                        $usdExchangeRate = 0.000065; // Example conversion rate IDR to USD
+                        $priceUSD = $course->price * $usdExchangeRate;
+                        $discountedPrice = $course->discount > 0 ? (1 - $course->discount / 100) * $course->price : $course->price;
+                        $discountedPriceUSD = $course->discount > 0 ? (1 - $course->discount / 100) * $priceUSD : $priceUSD;
+
+                        // Check the selected currency from the session
+                        $selectedCurrency = session('currency', 'IDR'); // Default to IDR if not set
+                    @endphp
+
+                    <!-- Display pricing based on selected currency -->
+                    @if($selectedCurrency === 'USD')
+                        <span class="price h5 text-primary mb-3">
+                            ${{ number_format($discountedPriceUSD, 2) }} 
+                            @if($course->discount > 0)
+                                <span class="h5 text-muted text-decoration-line-through">
+                                    ${{ number_format($priceUSD, 2) }}
+                                </span>
+                                <small class="text-danger ms-1">Save {{ intval($course->discount) }}%</small>
+                            @endif
+                        </span>
+                    @else
+                        <span class="price h5 text-primary mb-3">
+                            Rp{{ number_format($discountedPrice, 2) }}
+                        </span>
+                        @if($course->discount > 0)
+                            <span class="h5 text-muted text-decoration-line-through">
+                                Rp{{ number_format($course->price, 2) }}
+                            </span>
+                            <small class="text-danger ms-1">Save {{ intval($course->discount) }}%</small>
+                        @endif
+                    @endif
+
                     <ul class="stars list-unstyled d-flex mb-3">
                         @for($i = 0; $i < 5; $i++)
                             <li class="me-1">
@@ -28,23 +61,30 @@
                         <p class="mb-0">Unlock the secrets of {{ $course->title }} and elevate your digital creations to new heights.</p>
                     </div>
                     <div class="total mb-4">
-                        <h4>Total: Rp{{ number_format($course->price, 2) }}</h4>
+                        <h4>
+                            Total:
+                            @if($selectedCurrency === 'USD')
+                                ${{ number_format($discountedPriceUSD, 2) }}
+                            @else
+                                Rp{{ number_format($discountedPrice, 2) }}
+                            @endif
+                        </h4>
 
-                        <!-- Kondisi jika role user adalah student -->
+                        <!-- Check if user is a student -->
                         @if(Auth::check() && Auth::user()->role === 'student')
                             <div class="main-border-button">
                                 @php
                                     $cart = session('cart');
                                     $inCart = isset($cart[$course->id]);
 
-                                    // Cek apakah user sudah memiliki transaksi yang dikonfirmasi untuk kursus ini
+                                    // Check if user has a confirmed transaction for this course
                                     $transactionFinished = \App\Models\TransactionItem::whereHas('transaction', function($query) {
                                         $query->where('user_id', auth()->id())
                                               ->where('status', 'settlement');
                                     })->where('course_id', $course->id)->exists();
                                 @endphp
 
-                                <!-- Disable button jika jumlah siswa = 0 -->
+                                <!-- Disable button if the number of students = 0 -->
                                 @if($course->students <= 0)
                                     <button class="btn btn-secondary w-100" disabled>
                                         Students Full
@@ -67,7 +107,7 @@
                                 @endif
                             </div>
                         @else
-                            <!-- Jika belum login -->
+                            <!-- If not logged in -->
                             <div class="main-border-button">
                                 <a href="{{ route('login') }}" class="btn btn-primary w-100">
                                     Login to Add to Cart

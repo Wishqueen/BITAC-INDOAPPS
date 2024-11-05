@@ -36,22 +36,28 @@ class StudentController extends Controller
 
     public function index2(Request $request)
     {
-        // Get all students
-        $students = User::where('role', 'student')->with('transactions.transactionItems.course')->get();
-    
-        // Filter students who have completed transactions
-        $studentsWithTransactions = $students->filter(function ($student) {
-            return $student->transactions->contains(function ($transaction) {
-                return $transaction->status === 'settlement';
-            });
-        });
+        // Ambil semua kursus untuk dropdown filter
+        $courses = Course::all();
 
-        $shuffledStudents = $studentsWithTransactions->shuffle();
+        // Ambil data siswa berdasarkan course filter jika ada
+        $selectedCourse = $request->input('course');
 
-        return view('students.index2', [
-            'students' => $shuffledStudents,
-        ]);
+        $query = Transaction::whereHas('transactionItems', function ($query) use ($selectedCourse) {
+            if ($selectedCourse) {
+                $query->whereHas('course', function ($query) use ($selectedCourse) {
+                    $query->where('title', $selectedCourse);
+                });
+            }
+        })->with('user', 'transactionItems.course')->get();
+
+        // Mengambil user unik dari transaksi yang ditemukan
+        $students = $query->map(function ($transaction) {
+            return $transaction->user;
+        })->unique('id'); // Menghindari duplikat siswa
+
+        return view('students.index2', compact('students', 'courses', 'selectedCourse'));
     }
+    
     
 
     public function show($id)

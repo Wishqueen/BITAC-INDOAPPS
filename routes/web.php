@@ -9,6 +9,7 @@ use App\Http\Controllers\CourseController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CertificationController;
 use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\CurrencyController;
 use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\instructorController;
 use App\Http\Controllers\LearningMaterialController;
@@ -30,7 +31,7 @@ use App\Http\Controllers\UserController;
 |
 */
 
-Route::get('/index', function () {
+Route::get('/', function () {
     return view('pages.index');
 });
 Route::get('/about', function () {
@@ -66,6 +67,8 @@ Route::get('/search', [SearchController::class, 'search'])->name('search');
 Route::get('/detailCourse', function () {
     return view('pages.detailCourse');
 });
+// Route to set currency
+
 Route::get('/student', [StudentController::class, 'index2'])->name('students.index2');
 Route::get('/students/{id}', [StudentController::class, 'show'])->name('students.show');
 

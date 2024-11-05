@@ -43,7 +43,21 @@ class CartController extends Controller
     // Menampilkan view keranjang
     public function viewCart()
     {
-        return view('cart.view'); // Mengembalikan view untuk menampilkan keranjang
+        $cart = session('cart', []);
+        $total = 0;
+    
+        foreach ($cart as $id => &$details) {
+            $course = Course::find($id);
+            if ($course) {
+                // Mengubah nilai diskon dari bentuk integer ke persentase (5 menjadi 0.05)
+                $discountRate = ($course->discount ?? 0) / 100;
+                $details['discountRate'] = $discountRate * 100; // Untuk ditampilkan dalam persentase
+                $details['discountedPrice'] = $details['price'] * (1 - $discountRate);
+                $total += $details['discountedPrice'] * $details['quantity'];
+            }
+        }
+    
+        return view('cart.view', compact('cart', 'total'));
     }
 
     // Menampilkan form checkout

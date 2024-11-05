@@ -34,36 +34,57 @@ class CourseController extends Controller
     // Menyimpan kursus baru ke database
     public function store(Request $request)
     {
-        // Validasi input
-        $request->validate([
+        // Validate input
+        $validatedData = $request->validate([
             'title' => 'required|string|max:255',
-            'price' => 'required|numeric',
+            'price' => 'required|numeric|min:0', // Ensure price is non-negative
+            'discount' => 'nullable|numeric|min:0|max:100', // Optional discount, 0-100
             'duration' => 'required|string',
-            'students' => 'required|integer',
+            'students' => 'required|integer|min:1', // Ensure at least one student
             'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'description' => 'required|string',
         ]);
-
-        // Simpan gambar
-        $imageName = time() . '.' . $request->image->extension(); // Membuat nama file unik untuk gambar
-        $request->image->move(public_path('assets/img'), $imageName); // Memindahkan gambar ke folder yang ditentukan
-
-        // Dapatkan nama instruktur dari pengguna yang sedang login
+    
+        // Save image
+        $imageName = time() . '.' . $request->image->extension();
+        $request->image->move(public_path('assets/img'), $imageName);
+    
+        // Get instructor name from the logged-in user
         $instructorName = Auth::user()->name;
-
-        // Buat kursus baru
+    
+        // Calculate discounted price if discount is provided
+        $discount = $validatedData['discount'] ?? 0; // Default to 0 if not provided
+        $discountedPrice = $this->calculateDiscountedPrice($validatedData['price'], $discount);
+    
+        // Create a new course
         Course::create([
-            'title' => $request->title,
-            'price' => $request->price,
-            'duration' => $request->duration,
-            'instructor' => $instructorName, // Nama instruktur dari user yang login
-            'students' => $request->students,
+            'title' => $validatedData['title'],
+            'price' => $validatedData['price'], // Save the original price
+            'discount' => $discount, // Save the discount percentage
+            'discounted_price' => $discountedPrice, // Save the final price after discount
+            'duration' => $validatedData['duration'],
+            'instructor' => $instructorName,
+            'students' => $validatedData['students'],
             'image' => $imageName,
-            'description' => $request->description,
+            'description' => $validatedData['description'],
         ]);
-
-        return redirect()->route('course.index')->with('success', 'Kursus berhasil ditambahkan.'); // Mengalihkan ke halaman daftar kursus dengan pesan sukses
+    
+        return redirect()->route('course.index')->with('success', 'Kursus berhasil ditambahkan.');
     }
+    
+    /**
+     * Calculate discounted price based on original price and discount percentage.
+     *
+     * @param float $price
+     * @param float $discount
+     * @return float
+     */
+    private function calculateDiscountedPrice($price, $discount)
+    {
+        return $price - ($price * $discount / 100);
+    }
+    
+    
 
     // Menampilkan form untuk mengedit kursus
     public function edit($id)
@@ -73,43 +94,56 @@ class CourseController extends Controller
     }
 
     // Memperbarui detail kursus
-    public function update(Request $request, Course $course)
+    public function update(Request $request, $id)
     {
-        // Validasi input
-        $request->validate([
+        // Find the course by ID
+        $course = Course::findOrFail($id);
+    
+        // Validate input
+        $validatedData = $request->validate([
             'title' => 'required|string|max:255',
-            'price' => 'required|numeric',
+            'price' => 'required|numeric|min:0', // Ensure price is non-negative
+            'discount' => 'nullable|numeric|min:0|max:100', // Optional discount, 0-100
             'duration' => 'required|string',
-            'students' => 'required|integer',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'students' => 'required|integer|min:1', // Ensure at least one student
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048', // Image is optional
             'description' => 'required|string',
         ]);
-
-        // Jika ada gambar baru diunggah
+    
+        // Calculate discounted price if discount is provided
+        $discount = $validatedData['discount'] ?? 0; // Default to 0 if not provided
+        $discountedPrice = $this->calculateDiscountedPrice($validatedData['price'], $discount);
+    
+        // Check if a new image is uploaded
         if ($request->hasFile('image')) {
-            // Hapus gambar lama
-            if (file_exists(public_path('assets/img/' . $course->image))) {
-                unlink(public_path('assets/img/' . $course->image)); // Menghapus gambar lama
+            // Save the new image
+            $imageName = time() . '.' . $request->image->extension();
+            $request->image->move(public_path('assets/img'), $imageName);
+    
+            // Delete the old image (optional)
+            if ($course->image && file_exists(public_path('assets/img/' . $course->image))) {
+                unlink(public_path('assets/img/' . $course->image));
             }
-
-            // Simpan gambar baru
-            $imageName = time() . '.' . $request->image->extension(); // Membuat nama file unik untuk gambar baru
-            $request->image->move(public_path('assets/img'), $imageName); // Memindahkan gambar baru
-            $course->image = $imageName; // Memperbarui nama gambar
+        } else {
+            // Keep the old image if no new image is uploaded
+            $imageName = $course->image;
         }
-
-        // Perbarui detail kursus
+    
+        // Update the course record
         $course->update([
-            'title' => $request->title,
-            'price' => $request->price,
-            'duration' => $request->duration,
-            'instructor' => Auth::user()->name, // Update instruktur
-            'students' => $request->students,
-            'description' => $request->description,
+            'title' => $validatedData['title'],
+            'price' => $validatedData['price'], // Save the original price
+            'discount' => $discount, // Save the discount percentage
+            'discounted_price' => $discountedPrice, // Save the final price after discount
+            'duration' => $validatedData['duration'],
+            'students' => $validatedData['students'],
+            'image' => $imageName,
+            'description' => $validatedData['description'],
         ]);
-
-        return redirect()->route('course.index')->with('success', 'Kursus berhasil diperbarui.'); // Mengalihkan ke halaman daftar kursus dengan pesan sukses
+    
+        return redirect()->route('course.index')->with('success', 'Kursus berhasil diperbarui.');
     }
+    
 
     // Menghapus kursus
     public function destroy($id)

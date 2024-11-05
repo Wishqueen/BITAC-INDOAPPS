@@ -42,25 +42,29 @@ class AuthController extends Controller
     // Login
     public function login(Request $request)
     {
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'required',
+        ]);
+    
         $credentials = $request->only('email', 'password');
     
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
     
             $user = Auth::user();
-            
-            // Redirect based on user role
             if ($user->role === 'admin') {
-                return redirect()->route('course.index'); // Admin dashboard route
+                return redirect()->route('course.index');
             } elseif ($user->role === 'instructor') {
-                return redirect()->route('course.index'); // Instructor dashboard route
+                return redirect()->route('course.index');
             } else {
-                return redirect()->route('course.index'); // Default route for students
+                return redirect()->route('course.index');
             }
         }
     
         return back()->withErrors(['error' => 'Email or password is incorrect.']);
     }
+    
 
     // Forgot Password - Send Reset Link
 // Forgot Password - Send Reset Link
@@ -125,6 +129,6 @@ public function forgotPassword(Request $request)
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect('/index')->with('success', 'You have been logged out successfully.');
+        return redirect('/')->with('success', 'You have been logged out successfully.');
     }
 }

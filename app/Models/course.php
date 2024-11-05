@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory; 
 use Illuminate\Database\Eloquent\Model;
 
-class Course extends Model
+class course extends Model
 {
     use HasFactory; // Menggunakan trait HasFactory
 
@@ -14,6 +14,8 @@ class Course extends Model
     protected $fillable = [ // Mendefinisikan kolom yang dapat diisi secara massal
         'title',
         'price',
+        'discount', 
+        'discounted_price',
         'duration',
         'instructor',
         'students',

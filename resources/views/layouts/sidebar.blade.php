@@ -60,11 +60,6 @@
                             <i class="fa fa-check-square me-2" style="font-size: 16px;"></i> Assignments
                         </a>
                     </li>
-                    <li class="nav-item mb-2">
-                        <a class="nav-link text-black d-flex align-items-center" href="{{ url('/certifications') }}">
-                            <i class="fa fa-certificate me-2" style="font-size: 16px;"></i> Certification
-                        </a>
-                    </li>
                 @endif
 
                 @if (Auth::user()->role === 'instructor')
