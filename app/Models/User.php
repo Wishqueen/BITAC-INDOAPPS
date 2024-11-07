@@ -19,6 +19,11 @@ class User extends Authenticatable
      *
      * @var array<int, string>
      */
+
+
+
+    // salah satu contoh access modifier (encapsulation -> protected)
+    // access modifier (protected, private, public, etc..)
     protected $fillable = [
         'name',
         'gender',

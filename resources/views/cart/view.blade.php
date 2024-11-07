@@ -25,7 +25,7 @@
                             $discountRate = $details['discountRate'] ?? 0; // Display as percentage
                             $discountedPrice = $details['discountedPrice'];
                             $subtotal = $discountedPrice * $details['quantity'];
-                        @endphp
+                        @endphpb
                         <tr>
                             <td class="align-middle">{{ $details['title'] }}</td>
                             <td class="align-middle">Rp{{ number_format($originalPrice, 2) }}</td>

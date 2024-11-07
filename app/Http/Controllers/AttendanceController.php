@@ -90,7 +90,7 @@ class AttendanceController extends Controller
 
         // Generate the CSV content
         $callback = function () use ($attendances) {
-            // Clear output buffer before sending file
+            // Bersihkan buffer keluaran sebelum mengirim file
             ob_clean();
 
             $handle = fopen('php://output', 'w');

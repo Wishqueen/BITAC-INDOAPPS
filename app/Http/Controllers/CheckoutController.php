@@ -20,7 +20,7 @@ class CheckoutController extends Controller
     {
         // Menghitung total harga dengan memastikan bahwa price diubah menjadi integer
         $totalPrice = array_sum(array_map(function ($item) {
-            return (int) $item['price']; // Mengubah price menjadi integer
+            return (int) $item['discountedPrice']; // Mengubah price menjadi integer
         }, $cart));
 
         // Mempersiapkan parameter untuk dikirim ke Midtrans
@@ -32,7 +32,7 @@ class CheckoutController extends Controller
             'item_details' => array_map(function ($item) {
                 return [
                     'id' => $item['title'], // Menggunakan title sebagai ID item
-                    'price' => (int) $item['price'], // Ubah price menjadi integer
+                    'price' => (int) $item['discountedPrice'], // Ubah price menjadi integer
                     'quantity' => 1, // Quantity default 1
                     'name' => $item['title'], // Nama item diambil dari title
                 ];

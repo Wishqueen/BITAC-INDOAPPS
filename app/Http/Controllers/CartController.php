@@ -27,17 +27,22 @@ class CartController extends Controller
         $course = Course::findOrFail($id); // Mencari kursus berdasarkan ID
         $cart = session()->get('cart', []); // Mengambil keranjang dari session, jika tidak ada, inisialisasi dengan array kosong
 
-        // Tambahkan item ke keranjang
+        // Tambahkan item ke keranjang dengan informasi diskon
+        $discountRate = ($course->discount ?? 0) / 100;
+        $discountedPrice = $course->price * (1 - $discountRate);
+
         $cart[$id] = [
             "course_id" => $course->id,
             "title" => $course->title,
             "price" => $course->price,
-            "quantity" => 1, // Set default quantity
+            "discountRate" => $discountRate * 100,
+            "discountedPrice" => $discountedPrice,
+            "quantity" => 1,
             "image" => $course->image,
         ];
 
-        session()->put('cart', $cart); // Simpan keranjang yang sudah diperbarui ke session
-        return redirect()->back()->with('success', 'Course added to cart successfully!'); // Mengalihkan kembali dengan pesan sukses
+        session()->put('cart', $cart);
+        return redirect()->back()->with('success', 'Course added to cart successfully!');
     }
 
     // Menampilkan view keranjang
@@ -46,15 +51,8 @@ class CartController extends Controller
         $cart = session('cart', []);
         $total = 0;
     
-        foreach ($cart as $id => &$details) {
-            $course = Course::find($id);
-            if ($course) {
-                // Mengubah nilai diskon dari bentuk integer ke persentase (5 menjadi 0.05)
-                $discountRate = ($course->discount ?? 0) / 100;
-                $details['discountRate'] = $discountRate * 100; // Untuk ditampilkan dalam persentase
-                $details['discountedPrice'] = $details['price'] * (1 - $discountRate);
-                $total += $details['discountedPrice'] * $details['quantity'];
-            }
+        foreach ($cart as &$details) {
+            $total += $details['discountedPrice'] * $details['quantity'];
         }
     
         return view('cart.view', compact('cart', 'total'));
@@ -73,7 +71,7 @@ class CartController extends Controller
         // Hitung total amount
         $amount = 0;
         foreach ($cart as $item) {
-            $amount += $item['price'] * $item['quantity']; // Menghitung total harga
+            $amount += $item['discountedPrice'] * $item['quantity']; // Menghitung total harga
         }
 
         // Generate transaction ID
@@ -92,7 +90,7 @@ class CartController extends Controller
             TransactionItem::create([
                 'transaction_id' => $transaction->id, // ID transaksi
                 'course_id' => $details['course_id'], // ID kursus
-                'price' => $details['price'], // Harga kursus
+                'price' => $details['discountedPrice'], // Harga kursus
                 'quantity' => $details['quantity'], // Kuantitas
             ]);
         }
@@ -102,7 +100,7 @@ class CartController extends Controller
         foreach ($cart as $id => $details) {
             $midtransItems[] = [
                 'id' => $id,
-                'price' => $details['price'],
+                'price' => $details['discountedPrice'],
                 'quantity' => $details['quantity'],
                 'name' => $details['title'],
             ];
@@ -144,7 +142,7 @@ class CartController extends Controller
         // Hitung total amount
         $amount = 0;
         foreach ($cart as $item) {
-            $amount += $item['price'] * $item['quantity']; // Menghitung total harga
+            $amount += $item['discountedPrice'] * $item['quantity']; // Menghitung total harga
         }
 
         // Buat transaksi di database
@@ -160,7 +158,7 @@ class CartController extends Controller
             TransactionItem::create([
                 'transaction_id' => $trxid,
                 'course_id' => $details['course_id'], // ID kursus
-                'price' => $details['price'], // Harga kursus
+                'price' => $details['discountedPrice'], // Harga kursus
                 'quantity' => $details['quantity'], // Kuantitas
             ]);
         }
@@ -170,7 +168,7 @@ class CartController extends Controller
         foreach ($cart as $id => $details) {
             $midtransItems[] = [
                 'id' => $id,
-                'price' => $details['price'],
+                'price' => (int) $details['discountedPrice'],  
                 'quantity' => $details['quantity'],
                 'name' => $details['title'],
             ];
