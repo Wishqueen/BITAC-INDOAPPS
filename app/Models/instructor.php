@@ -10,9 +10,15 @@ class instructor extends Model
     use HasFactory;
 
     protected $fillable = [
-        'name',
+       'name',
+        'address',
+        'phone',
+       'email',
+       'skills',
+        'date_of_birth',
         'image',
-        'skills',
-        'description',
+        'cv',
+        'status',
+       'description'
     ];
 }

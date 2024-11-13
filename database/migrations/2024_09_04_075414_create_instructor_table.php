@@ -14,9 +14,15 @@ return new class extends Migration
         Schema::create('instructors', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('image')->nullable();
+            $table->string('address');
+            $table->string('phone');
+            $table->string('email')->unique();
             $table->string('skills');
-            $table->text('description');
+            $table->date('date_of_birth');
+            $table->string('image')->nullable();
+            $table->string('cv');
+            $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
+            $table->text('description')->nullable();
             $table->timestamps();
         });
     }
@@ -26,6 +32,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('instructor');
+        Schema::dropIfExists('instructors');
     }
 };

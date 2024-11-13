@@ -2,34 +2,69 @@
 <div class="offcanvas offcanvas-end bg-light text-black shadow-lg" tabindex="-1" id="sidebarProfile"
     aria-labelledby="sidebarLabel" style="width: 250px;">
     <div class="offcanvas-body d-flex flex-column p-3">
-        <!-- Profile Picture (Optional) -->
-        <div class="text-center mb-4">
-            @auth
+<!-- Profile Picture -->
+<div class="text-center mb-4">
+    @auth
+        @if (Auth::user()->role === 'instructor')
+            @php
+                // Fetch the approved instructor data based on the user's email
+                $instructor = \App\Models\Instructor::where('email', Auth::user()->email)
+                                                    ->where('status', 'approved')
+                                                    ->first();
+            @endphp
+
+            @if ($instructor && $instructor->image)
+                <!-- If approved instructor has a profile picture -->
+                <a href="{{ url('/profile') }}">
+                    <img src="{{ asset($instructor->image) }}" alt="Instructor Profile Picture" class="rounded-circle" width="60" height="60">
+                </a>
+            @else
+                <!-- If no image or instructor is not approved, show the user image if available -->
                 @if (Auth::user()->image)
-                    <!-- If profile picture exists -->
                     <a href="{{ url('/profile') }}">
-                        <img src="{{ asset('img/' . Auth::user()->image) }}" alt="Profile Picture" class="rounded-circle"
-                            width="60" height="60">
+                        <img src="{{ asset('img/' . Auth::user()->image) }}" alt="User Profile Picture" class="rounded-circle" width="60" height="60">
                     </a>
                 @else
-                    <!-- If no profile picture, display the first letter of the name or email -->
+                    <!-- If no image, show the first letter of the name or email -->
                     <a href="{{ url('/profile') }}">
-                        <div class="rounded-circle bg-primary text-white d-flex justify-content-center align-items-center mx-auto"
-                            style="width: 60px; height: 60px; font-size: 24px;">
+                        <div class="rounded-circle bg-primary text-white d-flex justify-content-center align-items-center mx-auto" style="width: 60px; height: 60px; font-size: 24px;">
                             {{ strtoupper(substr(Auth::user()->name ?? Auth::user()->email, 0, 1)) }}
                         </div>
                     </a>
                 @endif
-                <h6 class="mt-2">{{ Auth::user()->name }}</h6>
-                <small>{{ Auth::user()->email }}</small>
+            @endif
+        @else
+            <!-- For non-instructor roles, fallback to the user image or initial -->
+            @if (Auth::user()->image)
+                <a href="{{ url('/profile') }}">
+                    <img src="{{ asset('img/' . Auth::user()->image) }}" alt="User Profile Picture" class="rounded-circle" width="60" height="60">
+                </a>
             @else
-                <p>Please log in to see your profile information.</p>
-            @endauth
-        </div>
+                <a href="{{ url('/profile') }}">
+                    <div class="rounded-circle bg-primary text-white d-flex justify-content-center align-items-center mx-auto" style="width: 60px; height: 60px; font-size: 24px;">
+                        {{ strtoupper(substr(Auth::user()->name ?? Auth::user()->email, 0, 1)) }}
+                    </div>
+                </a>
+            @endif
+        @endif
+        <h6 class="mt-2">{{ Auth::user()->name }}</h6>
+        <small>{{ Auth::user()->email }}</small>
+    @else
+        <p>Please log in to see your profile information.</p>
+    @endauth
+</div>
 
         <!-- Menu Items -->
         <ul class="navbar-nav flex-grow-1">
             @auth
+
+            @if (Auth::user()->role === 'Admin')
+    <li class="nav-item mb-2">
+        <a class="nav-link text-black d-flex align-items-center" href="{{ url('/admin/instructors/pending') }}">
+            <i class="fa fa-user-clock me-2" style="font-size: 16px;"></i> Instructors Validation
+        </a>
+    </li>
+@endif
                 @if (Auth::user()->role === 'student')
                     <li class="nav-item mb-2">
                         <a class="nav-link text-black d-flex align-items-center" href="{{ url('/my-courses') }}">

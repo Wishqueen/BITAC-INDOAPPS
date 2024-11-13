@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\instructor;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -13,7 +14,19 @@ class ProfileController extends Controller
     // Menampilkan halaman profil pengguna
     public function edit()
     {
-        return view('profile.index');
+        $user = Auth::user();
+        
+        // Initialize $instructor as null by default
+        $instructor = null;
+
+        // Check if the user has an 'instructor' role
+        if ($user->role === 'instructor') {
+            // Fetch the approved instructor data based on the user's email
+            $instructor = instructor::where('email', $user->email)
+                                    ->where('status', 'approved')
+                                    ->first();
+        }
+        return view('profile.index', compact('user', 'instructor'));
     }
 
     // Mengupdate profil pengguna
@@ -67,5 +80,24 @@ class ProfileController extends Controller
 
         // Redirect dengan pesan sukses
         return redirect()->route('profile.edit')->with('success', 'Profile updated successfully!');
+    }
+    public function showProfile()
+    {
+        // Get the logged-in user
+        $user = Auth::user();
+        
+        // Initialize $instructor as null by default
+        $instructor = null;
+
+        // Check if the user has an 'instructor' role
+        if ($user->role === 'instructor') {
+            // Fetch the approved instructor data based on the user's email
+            $instructor = instructor::where('email', $user->email)
+                                    ->where('status', 'approved')
+                                    ->first();
+        }
+
+        // Pass both user and instructor data to the view
+        return view('profile.index', compact('user', 'instructor'));
     }
 }

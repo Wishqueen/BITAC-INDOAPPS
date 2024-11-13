@@ -35,18 +35,38 @@
 
 
             <!-- Profile Button -->
-            <button class="btn nav-link d-flex align-items-center p-0 border-0" data-bs-toggle="offcanvas"
-                data-bs-target="#sidebarProfile">
-                @if (Auth::user()->image)
-                    <img src="{{ asset('img/' . Auth::user()->image) }}" alt="Profile" class="rounded-circle"
-                        width="40" height="40">
-                @else
-                    <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center"
-                        style="width: 40px; height: 40px;">
-                        {{ strtoupper(substr(Auth::user()->email, 0, 1)) }}
-                    </div>
-                @endif
-            </button>
+<!-- Profile Button -->
+<button class="btn nav-link d-flex align-items-center p-0 border-0" data-bs-toggle="offcanvas"
+    data-bs-target="#sidebarProfile">
+    @php
+        $profileImage = null;
+        
+        // Check if user is an instructor with approved status
+        if (Auth::user()->role === 'instructor') {
+            $instructor = \App\Models\Instructor::where('email', Auth::user()->email)
+                                                ->where('status', 'approved')
+                                                ->first();
+            $profileImage = $instructor ? $instructor->image : null;
+        }
+    @endphp
+
+    @if ($profileImage)
+        <!-- Display instructor's profile picture if approved and available -->
+        <img src="{{ asset($profileImage) }}" alt="Instructor Profile" class="rounded-circle"
+             width="40" height="40">
+    @elseif (Auth::user()->image)
+        <!-- Otherwise, display user image from the users table -->
+        <img src="{{ asset('img/' . Auth::user()->image) }}" alt="User Profile" class="rounded-circle"
+             width="40" height="40">
+    @else
+        <!-- Placeholder with the user's initial if no image is available -->
+        <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center"
+             style="width: 40px; height: 40px;">
+            {{ strtoupper(substr(Auth::user()->email, 0, 1)) }}
+        </div>
+    @endif
+</button>
+
         </div>
     </div>
 </nav>

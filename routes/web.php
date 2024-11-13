@@ -37,7 +37,9 @@ Route::get('/', function () {
 Route::get('/about', function () {
     return view('pages.about');
 });
-
+Route::get('/register2', function () {
+    return view('auth.instructor_register');
+})->name('register2');
 Route::get('/register', function () {
     return view('auth.register');
 })->name('register');
@@ -85,6 +87,18 @@ Route::put('/instructors/{id}', [InstructorController::class, 'update'])->name('
 Route::delete('/instructors/{id}', [InstructorController::class, 'destroy'])->name('instructors.destroy');
 Route::get('/instructors/{id}', [InstructorController::class, 'show'])->name('instructors.show');
 
+Route::group(['middleware' => ['auth', 'role:admin']], function() {
+    
+    
+});
+
+Route::post('/instructor/pending', [InstructorController::class, 'storePending'])->name('instructor.pending');
+Route::get('/instructor/pending', [InstructorController::class, 'create'])->name('instructor.create');
+
+// Admin routes to approve/reject instructors
+Route::get('/admin/instructors/pending', [AdminController::class, 'pendingInstructors'])->name('admin.instructors.pending');
+Route::post('/admin/instructor/{id}/approve', [AdminController::class, 'approveInstructor'])->name('admin.instructor.approve');
+Route::post('/admin/instructor/{id}/reject', [AdminController::class, 'rejectInstructor'])->name('admin.instructor.reject');
 
 
 // Route::get('/courses/{id}/materials', [LearningMaterialController::class, 'index'])->name('course.materials');
@@ -93,12 +107,13 @@ Route::get('/instructors/{id}', [InstructorController::class, 'show'])->name('in
 // });
 
 Route::middleware('auth')->group(function() {
-    Route::get('/profile', function () {
-        return view('profile.index');
-    });
+    // Route::get('/profile', function () {
+    //     return view('profile.index');
+    // });
     Route::get('/update', function () {
         return view('profile.update');
     });
+    Route::get('/profile', [ProfileController::class, 'showProfile'])->name('profile.edit');
     Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::put('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
     

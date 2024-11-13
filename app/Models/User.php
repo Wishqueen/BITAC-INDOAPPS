@@ -35,6 +35,7 @@ class User extends Authenticatable
         'email_verified_at',
         'password',
         'course_id',
+        'status',
         'role',
 
     ];

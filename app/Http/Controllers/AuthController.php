@@ -16,53 +16,74 @@ class AuthController extends Controller
     // Register
     public function register(Request $request)
     {
+        // Validate required fields, excluding role
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8|confirmed',
-            'role' => 'required|string|in:student,instructor,admin', // Validate role input
         ]);
-
+    
+        // Check validation errors
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
         }
-
+    
+        // Default role assignment (e.g., "student")
+        $role = 'student'; // You can change this to another default role if needed
+    
+        // Create the user with the default role
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'role' => $request->role, // Store role in the database
+            'role' => $role, // Assign default role
         ]);
-
+    
+        // Log the user in
         Auth::login($user);
-
+    
+        // Redirect to the login page with a success message
         return redirect()->route('login')->with('success', 'Registration successful. Please log in.');
     }
+    
 
     // Login
     public function login(Request $request)
     {
+        // Validate the login form inputs
         $request->validate([
             'email' => 'required|email',
             'password' => 'required',
         ]);
     
-        $credentials = $request->only('email', 'password');
+        // Retrieve the user based on email
+        $user = User::where('email', $request->email)->first();
     
-        if (Auth::attempt($credentials)) {
-            $request->session()->regenerate();
+        // Check if the user exists
+        if ($user) {
+            // Check if the password is correct
+            if (Hash::check($request->password, $user->password)) {
+                // If the user is an instructor and not approved, show an error message
+                if ($user->role === 'instructor' && $user->status !== 'approved') {
+                    return back()->withErrors(['email' => 'Your account is still pending approval by the admin.']);
+                }
     
-            $user = Auth::user();
-            if ($user->role === 'admin') {
-                return redirect()->route('course.index');
-            } elseif ($user->role === 'instructor') {
+                // Log the user in
+                Auth::login($user);
+    
+                // Regenerate session to prevent session fixation
+                $request->session()->regenerate();
+    
+                // Redirect to intended page or dashboard based on role
                 return redirect()->route('course.index');
             } else {
-                return redirect()->route('course.index');
+                // Password is incorrect
+                return back()->withErrors(['password' => 'The provided password is incorrect.']);
             }
         }
     
-        return back()->withErrors(['error' => 'Email or password is incorrect.']);
+        // If the user does not exist
+        return back()->withErrors(['email' => 'No account found with this email address.']);
     }
     
 
