@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class AttendanceController extends Controller
 {
@@ -18,7 +19,7 @@ class AttendanceController extends Controller
         // Ambil roles dan courses untuk opsi filter
         $roles = ['student', 'instructor'];
         $courses = Course::all();
-
+    
         // Ambil data attendance dengan filter
         $attendances = Attendance::with('user')
             ->when($request->date, function ($query) use ($request) {
@@ -35,9 +36,20 @@ class AttendanceController extends Controller
                 });
             })
             ->get();
-
-        return view('attendance.index', compact('attendances', 'roles', 'courses'));
+    
+        // Cek apakah user memiliki courses hanya untuk role student
+        $hasCourses = true; // Default to true for non-students
+        if (auth()->user()->role === 'student') {
+            $hasCourses = DB::table('transaction_items')
+                ->join('transactions', 'transaction_items.transaction_id', '=', 'transactions.id')
+                ->where('transactions.user_id', auth()->id())
+                ->exists();
+        }
+    
+        return view('attendance.index', compact('attendances', 'roles', 'courses', 'hasCourses'));
     }
+    
+    
 
     public function store(Request $request)
     {
@@ -55,7 +67,7 @@ class AttendanceController extends Controller
             'user_id' => auth()->id(),
             'date' => now(),
             'status' => $request->status,
-            'reason' => $request->status === 'Tidak Hadir' ? $request->reason : null,
+            'reason' => $request->status === 'Absent' ? $request->reason : null,
         ]);
 
         return redirect()->route('attendance.index')->with('success', 'Attendance submitted successfully.');

@@ -16,17 +16,7 @@ class ProfileController extends Controller
     {
         $user = Auth::user();
         
-        // Initialize $instructor as null by default
-        $instructor = null;
-
-        // Check if the user has an 'instructor' role
-        if ($user->role === 'instructor') {
-            // Fetch the approved instructor data based on the user's email
-            $instructor = instructor::where('email', $user->email)
-                                    ->where('status', 'approved')
-                                    ->first();
-        }
-        return view('profile.index', compact('user', 'instructor'));
+        return view('profile.index', compact('user'));
     }
 
     // Mengupdate profil pengguna

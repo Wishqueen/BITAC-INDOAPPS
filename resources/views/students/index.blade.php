@@ -3,7 +3,7 @@
 @section('konten')
     <br><br>
     <div class="container">
-        <h1 class="mb-4 text-center">Data Siswa</h1>
+        <h1 class="mb-4 text-center">Student Data</h1>
 
         <div class="d-flex justify-content-between mb-3">
             <div class="form-group">

@@ -37,13 +37,15 @@ Route::get('/', function () {
 Route::get('/about', function () {
     return view('pages.about');
 });
-Route::get('/register2', function () {
-    return view('auth.instructor_register');
-})->name('register2');
+
 Route::get('/register', function () {
     return view('auth.register');
 })->name('register');
 Route::post('/register', [AuthController::class, 'register']);
+Route::get('/register2', function () {
+    return view('auth.instructor_register');
+})->name('register2');
+
 Route::get('/login', function () {
     return view('auth.login');
 })->name('login');
@@ -61,10 +63,13 @@ Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('
 
 
 route::resource('/course', CourseController::class);
+
 Route::get('/tambahCourse', [CourseController::class, 'create'])->name('course.create');
 Route::get('/courses', [CourseController::class, 'index'])->name('course.index');
-Route::get('/mycourses', [CourseController::class, 'myCourses'])->name('course.myCourses');
 Route::get('/course/{id}', [CourseController::class, 'show'])->name('detailCourse');
+
+Route::get('/mycourses', [CourseController::class, 'myCourses'])->name('course.myCourses');
+
 Route::get('/search', [SearchController::class, 'search'])->name('search');
 Route::get('/detailCourse', function () {
     return view('pages.detailCourse');
@@ -92,13 +97,17 @@ Route::group(['middleware' => ['auth', 'role:admin']], function() {
     
 });
 
-Route::post('/instructor/pending', [InstructorController::class, 'storePending'])->name('instructor.pending');
+Route::post('/instructor/pending', [InstructorController::class, 'storePending'])
+->name('instructor.pending');
 Route::get('/instructor/pending', [InstructorController::class, 'create'])->name('instructor.create');
 
 // Admin routes to approve/reject instructors
-Route::get('/admin/instructors/pending', [AdminController::class, 'pendingInstructors'])->name('admin.instructors.pending');
-Route::post('/admin/instructor/{id}/approve', [AdminController::class, 'approveInstructor'])->name('admin.instructor.approve');
-Route::post('/admin/instructor/{id}/reject', [AdminController::class, 'rejectInstructor'])->name('admin.instructor.reject');
+Route::get('/admin/instructors/pending', [AdminController::class, 'pendingInstructors'])
+->name('admin.instructors.pending');
+Route::post('/admin/instructor/{id}/approve', [AdminController::class, 'approveInstructor'])
+->name('admin.instructor.approve');
+Route::post('/admin/instructor/{id}/reject', [AdminController::class, 'rejectInstructor'])
+->name('admin.instructor.reject');
 
 
 // Route::get('/courses/{id}/materials', [LearningMaterialController::class, 'index'])->name('course.materials');

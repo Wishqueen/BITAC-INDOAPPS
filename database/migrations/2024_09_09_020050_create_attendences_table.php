@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->date('date'); // Tanggal absensi
-            $table->enum('status', ['Hadir', 'Tidak Hadir']); // Dropdown hadir atau tidak
+            $table->enum('status', ['Present', 'Absent']); // Dropdown hadir atau tidak
             $table->text('reason')->nullable(); // Alasan jika tidak hadir
             $table->timestamps();
 

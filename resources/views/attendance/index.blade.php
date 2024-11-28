@@ -16,20 +16,25 @@
         <!-- Attendance Form for Student and Instructor -->
         <form action="{{ route('attendance.store') }}" method="POST" id="attendance-form">
             @csrf
-            <div class="mb-3">
-                <label for="status" class="form-label">Status</label>
-                <select name="status" class="form-select" id="status" required>
-                    <option value="Hadir">Hadir</option>
-                    <option value="Tidak Hadir">Tidak Hadir</option>
-                </select>
-            </div>
-
-            <div class="mb-3" id="reason-field" style="display: none;">
-                <label for="reason" class="form-label">Reason (if not present)</label>
-                <textarea name="reason" class="form-control" id="reason" rows="3"></textarea>
-            </div>
-
-            <button type="submit" class="btn btn-primary">Submit Attendance</button>
+        
+            @if ($hasCourses) <!-- Only show the form if the student has checked out a course -->
+                <div class="mb-3">
+                    <label for="status" class="form-label">Status</label>
+                    <select name="status" class="form-select" id="status" required>
+                        <option value="Present">Present</option>
+                        <option value="Absent">Absent</option>
+                    </select>
+                </div>
+        
+                <div class="mb-3" id="reason-field" style="display: none;">
+                    <label for="reason" class="form-label">Reason (if not present)</label>
+                    <textarea name="reason" class="form-control" id="reason" rows="3"></textarea>
+                </div>
+        
+                <button type="submit" class="btn btn-primary">Submit Attendance</button>
+            @else
+                <p>You need to checkout a course before you can submit attendance.</p>
+            @endif
         </form>
     @endif
 
@@ -99,7 +104,7 @@
     // Function to show or hide reason field based on status
     document.getElementById('status').addEventListener('change', function() {
         const reasonField = document.getElementById('reason-field');
-        if (this.value === 'Tidak Hadir') {
+        if (this.value === 'Absent') {
             reasonField.style.display = 'block';  // Show reason field if status is 'Tidak Hadir'
         } else {
             reasonField.style.display = 'none';   // Hide reason field if status is 'Hadir'
