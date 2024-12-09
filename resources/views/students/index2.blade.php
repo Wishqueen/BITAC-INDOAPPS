@@ -7,7 +7,11 @@
     <div class="container">
         <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
             <h6 class="section-title bg-white text-center text-primary px-3">Students</h6>
-            <h1 class="mb-5">Our Students</h1>
+            <h1 class="mb-3">Our Students</h1>
+            <!-- Join Instructor Button -->
+            <a href="{{ route('register') }}" class="btn btn-outline-primary mb-5">
+                <i class="fas fa-user-plus"></i> Join as Student
+            </a>
         </div>
         <div class="row g-4">
             @foreach($students as $student)

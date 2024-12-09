@@ -45,6 +45,9 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::get('/register2', function () {
     return view('auth.instructor_register');
 })->name('register2');
+Route::post('/instructor/pending', [InstructorController::class, 'storePending'])
+->name('instructor.pending');
+Route::get('/instructor/pending', [InstructorController::class, 'create'])->name('instructor.create');
 
 Route::get('/login', function () {
     return view('auth.login');
@@ -97,9 +100,6 @@ Route::group(['middleware' => ['auth', 'role:admin']], function() {
     
 });
 
-Route::post('/instructor/pending', [InstructorController::class, 'storePending'])
-->name('instructor.pending');
-Route::get('/instructor/pending', [InstructorController::class, 'create'])->name('instructor.create');
 
 // Admin routes to approve/reject instructors
 Route::get('/admin/instructors/pending', [AdminController::class, 'pendingInstructors'])
